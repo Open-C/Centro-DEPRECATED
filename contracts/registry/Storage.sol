@@ -7,6 +7,7 @@ contract Storage is Types{
     mapping(address => bool) admin;
     address arboAddr;
     bool adminSet = false;
+    uint256 numWallets = 0;
 
     modifier isAdmin() {
         require (admin[msg.sender] || msg.sender == arboAddr, "Not an admin");
@@ -29,12 +30,12 @@ contract Storage is Types{
         return connectors[_name];
     }
 
-    function retrieveIds(address _addr) pure view returns (uint256[]) {
+    function retrieveIds(address _addr) view isAdmin returns (uint256[] storage) {
         require (addrToWallet[_addr].length > 0, "Address does not have any accounts");
         return addrToWallet[_addr];
     }
 
-    function getWallet(uint256 _id) pure view returns (Wallet) {
+    function getWallet(uint256 _id) view isAdmin returns (Wallet storage) {
         require(idToWallet[_id].addr != address(0), "Wallet does not exist");
         return idToWallet[_id];
     }
@@ -42,6 +43,12 @@ contract Storage is Types{
     function addWallet(address _user, Wallet _wallet) external isAdmin {
         addrToIds[_user] = _wallet.id;
         idToWallet[_wallet.id] = _wallet;
+        numWallets++;
+
+    }
+
+    function getNumWallets() view isAdmin returns (uint256) {
+        return numWallets;
     }
 
     function init(address[] _addrs) external {

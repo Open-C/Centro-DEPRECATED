@@ -6,10 +6,22 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "./registry/Storage.sol";
 import "./registry/Types.sol";
 import "./Connectors/MoolaC.sol";
+import "./registry/ArboWallet.sol";
 
 contract ArboMain is ReentrancyGuard, Types{
     mapping(address => uint256) currentWallet;
     Storage store = Storage(0x0000000);
+
+    function newWallet(String memory name) external {
+        ArboWallet wallet_addr = new ArboWallet(msg.sender);
+        Wallet memory wallet;
+        wallet.name = name;
+        wallet.owner = msg.sender;
+        wallet.role = "Owner";
+        wallet.addr = address(wallet_addr);
+        wallet.id = store.getNumWallets() + 1;
+        store.addWallet(msg.sender, wallet);
+    }
 
     function getAccountIds() view returns (uint256[] memory) {
         return (store.retrieveIds(msg.sender));
