@@ -38,7 +38,6 @@ contract ArboMain is ReentrancyGuard, Types{
         require(wId != 0, "Provide a wallet id, or persist a wallet.");
         Wallet storage w = store.getWallet(wId);
         return(SmartWallet(w.addr));
-
     }
 
     function getAccountOverview() view returns (Wallet[] memory _wallets) {
@@ -50,14 +49,27 @@ contract ArboMain is ReentrancyGuard, Types{
     }
 
     function deposit(address _tok, uint256 _amt, uint256 _wId) external payable {
-        SmartWallet sw = getWallet(_wId);
+        SmartWallet memory sw = getWallet(_wId);
         sw.deposit(msg.sender, _tok, _amt);
     }
 
+    function moolaDeposit(address _tok, uint256 _amt, uint256 _wId) payable {
+        SmartWallet memory sw = getWallet(_wId);
+        bytes memory data = abi.encodeWithSignature("deposit(address, uint256)", _tok, _amt);
+        sw.callConnector(msg.sender, store.getConnector("moola"), data);
+    }
+
     function withdraw(address _tok, uint256 _amt, uint256 _wId) external payable {
-        SmartWallet sw = getWallet(_wId);
+        SmartWallet memory sw = getWallet(_wId);
         sw.withdraw(msg.sender, _tok, _amt);
     }
+
+    function moolaWithdraw(address _tok, uint256 _amt, uint256 _wId) payable {
+        SmartWallet memory sw = getWallet(_wId);
+        bytes memory data = abi.encodeWithSignature("withdraw(address, uint256)", _tok, _amt);
+        sw.callConnector(msg.sender, store.getConnector("moola"), data);
+    }
+
 
     function callConnector(String memory _connector, bytes _calldata, uint256 _wId) external {
         address target = store.getConnector(_connector);

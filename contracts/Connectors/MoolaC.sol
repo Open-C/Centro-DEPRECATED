@@ -16,7 +16,7 @@ contract MoolaHelper is ReentrancyGuard {
     }
 }
 
-contract MoolaConnector is ReentrancyGuard{
+contract MoolaConnector is MoolaHelper{
     using SafeMath for uint256;
     using Address for address;
 
