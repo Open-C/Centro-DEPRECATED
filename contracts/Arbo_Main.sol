@@ -8,7 +8,7 @@ import "./registry/Types.sol";
 import "./Connectors/MoolaC.sol";
 import "./registry/ArboWallet.sol";
 
-contract ArboMain is ReentrancyGuard, Types{
+contract CentroMain is ReentrancyGuard, Types{
     mapping(address => uint256) currentWallet;
     Storage store = Storage(0x0000000);
 
@@ -21,6 +21,7 @@ contract ArboMain is ReentrancyGuard, Types{
         wallet.addr = address(wallet_addr);
         wallet.id = store.getNumWallets() + 1;
         store.addWallet(msg.sender, wallet);
+        currentWallet[msg.sender] = wallet.id;
     }
 
     function getAccountIds() view returns (uint256[] memory) {
@@ -48,6 +49,11 @@ contract ArboMain is ReentrancyGuard, Types{
         }
     }
 
+    function getWalletBalance(uint256 _wId) view returns (address[] memory, uint256[] memory) {
+        SmartWallet memory sw = getWallet(_wId);
+        return sw.getBasis(msg.sender);
+    }
+
     function deposit(address _tok, uint256 _amt, uint256 _wId) external payable {
         SmartWallet memory sw = getWallet(_wId);
         sw.deposit(msg.sender, _tok, _amt);
@@ -68,6 +74,18 @@ contract ArboMain is ReentrancyGuard, Types{
         SmartWallet memory sw = getWallet(_wId);
         bytes memory data = abi.encodeWithSignature("withdraw(address, uint256)", _tok, _amt);
         sw.callConnector(msg.sender, store.getConnector("moola"), data);
+    }
+
+    function buyCelo(uint256 _amt, uint256 _maxSellAmt, uint256 _wId) external {
+        SmartWallet memory sw = getWallet(_wId);
+        bytes memory data = abi.encodeWithSignature("buyCelo(uint256, uint256)", _amt, _maxSellAmt);
+        sw.callConnector(msg.sender, store.getConnector("exchange"), data);
+    }
+
+    function sellCelo(uint256 _amt, uint256 _minBuyAmt, uint256 _wId) external {
+        SmartWallet memory sw = getWallet(_wId);
+        bytes memory data = abi.encodeWithSignature("sellCelo(uint256, uint256)", _amt, _minBuyAmt);
+        sw.callConnector(msg.sender, store.getConnector("exchange"), data);
     }
 
     function send(address _tok, uint256 _receiver, uint256 _amt, uint256 _wId) payable external {

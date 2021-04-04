@@ -5,12 +5,12 @@ contract Storage is Types{
     mapping(address => uint256[]) addrToIds;
     mapping(uint256 => Wallet) idToWallet;
     mapping(address => bool) admin;
-    address arboAddr;
+    address centroAddr;
     bool adminSet = false;
     uint256 numWallets = 0;
 
     modifier isAdmin() {
-        require (admin[msg.sender] || msg.sender == arboAddr, "Not an admin");
+        require (admin[msg.sender] || msg.sender == centroAddr, "Not an admin");
         _;
     }
 
@@ -19,11 +19,11 @@ contract Storage is Types{
     }
 
     function getArbo() pure view returns (address) {
-        return arboAddr;
+        return centroAddr;
     }
 
     function setArboAddr(address _add) external isAdmin {
-        abroAddr = _add;
+        centroAddr = _add;
     }
 
     function getConnector(String memory _name) {

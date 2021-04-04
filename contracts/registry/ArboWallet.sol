@@ -39,6 +39,16 @@ contract ArboWallet is ReentrancyGuard, ContractCaller{
         deposited[_token] += _amt;
     }
 
+    function withDraw(address _from, address _token, uint256 _amt) external isMain {
+        require(auth[_from], "Unauthorized withdraw");
+        IERC20Token token = IERC20Token(_token);
+        uint256 amt = _amt == -1 ? token.balanceOf(address(this)) : _amt;
+        require(amt <= token.balanceOf(address(this)), "Insufficient funds");
+        token.approve(_from, amt);
+        token.transfer(_from, amt);
+        deposited[_token] -= amt;
+    }
+
     function send(address _from, address _tok, address _to, uint256 _amt) payable external isMain {
         require(auth[_from], "Unauthorized transfer.");
         IERC20Token token = IERC20Token(_tok);
@@ -51,8 +61,8 @@ contract ArboWallet is ReentrancyGuard, ContractCaller{
         deposited[_token] += _amt;
     }
 
-    function getBasis() isMain returns (address[] memory _tokens, uint256[] memory _bal) {
-        require(auth[_from], "Unauthorizeq query.");
+    function getBasis(address _from) isMain returns (address[] memory _tokens, uint256[] memory _bal) {
+        require(auth[_from], "Unauthorized query.");
         address[] memory _tokens = token_addr;
         uint256[_tokens.length] memory _bal;
         for (uint i = 0; i < _tokens.length; i++) {
@@ -60,8 +70,8 @@ contract ArboWallet is ReentrancyGuard, ContractCaller{
         }
     }
 
-    function callConnector(address _from, address _target, bytes _calldata) external payable {
+    function callConnector(address _from, address _target, bytes _calldata) external payable returns (bytes memory){
         require(auth[_from], "Unauthorized connector call");
-        delegate(_target, _calldata);
+        return delegate(_target, _calldata);
     }
 }
