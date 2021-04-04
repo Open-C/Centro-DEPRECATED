@@ -70,6 +70,12 @@ contract ArboMain is ReentrancyGuard, Types{
         sw.callConnector(msg.sender, store.getConnector("moola"), data);
     }
 
+    function send(address _tok, uint256 _receiver, uint256 _amt, uint256 _wId) payable external {
+        SmartWallet memory from = getWallet(_wId);
+        SmartWallet memory to = getWallet(_wId);
+        from.send(msg.sender, _tok, address(to), _amt);
+        to.incrementBasis(_tok, _amt);
+    }
 
     function callConnector(String memory _connector, bytes _calldata, uint256 _wId) external {
         address target = store.getConnector(_connector);

@@ -15,15 +15,21 @@ contract ArboWallet is ReentrancyGuard, ContractCaller{
     mapping(address => uint256) private deposited;
     address[] private token_addr;
     mapping (address => bool) auth;
+    address store = 0x00000;
 
     constructor(address _owner) {
         this.owner = _owner;
         auth[_owner] = true;
     }
 
+    modifier isMain() {
+        require(msg.sender == Storage(store).getArbo(), "Unauthorized access");
+        _;
+    }
+
     function receive() external payable {}
 
-    function deposit(address _from, address _token, uint256 _amt) payable external {
+    function deposit(address _from, address _token, uint256 _amt) payable external isMain {
         require(auth[_from], "Unauthorized deposit.");
         IERC20Token token = IERC20Token(_token);
         token.transferFrom(_from, address(this), _amt);
@@ -33,7 +39,19 @@ contract ArboWallet is ReentrancyGuard, ContractCaller{
         deposited[_token] += _amt;
     }
 
-    function getBasis() returns (address[] memory _tokens, uint256[] memory _bal) {
+    function send(address _from, address _tok, address _to, uint256 _amt) payable external isMain {
+        require(auth[_from], "Unauthorized transfer.");
+        IERC20Token token = IERC20Token(_tok);
+        token.approve(_to, _amt);
+        token.transferFrom(address(this), _to, _amt);
+        deposited[_token] -= _amt;
+    }
+
+    function incrementBasis(address _tok, uint256 _amt) external isMain {
+        deposited[_token] += _amt;
+    }
+
+    function getBasis() isMain returns (address[] memory _tokens, uint256[] memory _bal) {
         require(auth[_from], "Unauthorizeq query.");
         address[] memory _tokens = token_addr;
         uint256[_tokens.length] memory _bal;
