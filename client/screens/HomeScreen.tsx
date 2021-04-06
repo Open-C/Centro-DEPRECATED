@@ -22,9 +22,9 @@ const dapps = [{
 	navigationLink: 'MentoScreen'
 }, {
 	image: '',
-	name: ['block', 'explorer'],
-	description: 'view balances\nand transactions',
-	navigationLink: 'BlockExplorerScreen'
+	name: ['centro', 'pay'],
+	description: 'limit orders for\nthe Celo exprichange',
+	navigationLink: 'CentroPayScreen'
 }, {
 	image: '',
 	name: ['ube', 'swap'],
@@ -32,15 +32,20 @@ const dapps = [{
 	navigationLink: 'UbeswapScreen'
 }, {
 	image: '',
-	name: ['poof', 'cash'],
-	description: 'private & anonymous\ntransactions',
-	navigationLink: 'PoofCashScreen'
+	name: ['block', 'explorer'],
+	description: 'view balances\nand transactions',
+	navigationLink: 'BlockExplorerScreen'
 }, {
 	image: '',
 	name: ['pollen', 'hives'],
 	description: 'save and lend\nwith trusted peers',
 	navigationLink: 'PollenScreen'
-}]
+}, /*{
+	image: '',
+	name: ['poof', 'cash'],
+	description: 'private & anonymous\ntransactions',
+	navigationLink: 'PoofCashScreen'
+}*/]
 
 
 export default function HomeScreen({ navigation }: StackScreenProps<HomeStackParamList, 'HomeScreen'>) {

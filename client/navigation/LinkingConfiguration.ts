@@ -11,10 +11,11 @@ export default {
 							HomeScreen: 'home',
 							MoolaMarketScreen: 'moolamarket',
 							MentoScreen: 'mento',
-							BlockExplorerScreen: 'explorer',
+							CentroPayScreen: 'pay',
 							UbeswapScreen: 'ubeswap',
-							PoofCashScreen: 'poofcash',
+							BlockExplorerScreen: 'explorer',
 							PollenScreen: 'pollen',
+							PoofCashScreen: 'poofcash',
 						},
 					},
 					AssetsTab: {

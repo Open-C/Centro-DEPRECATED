@@ -13,10 +13,11 @@ export type HomeStackParamList = {
 	HomeScreen: undefined
 	MoolaMarketScreen: undefined
 	MentoScreen: undefined
-	BlockExplorerScreen: undefined
+	CentroPayScreen: undefined
 	UbeswapScreen: undefined
-	PoofCashScreen: undefined
+	BlockExplorerScreen: undefined
 	PollenScreen: undefined
+	PoofCashScreen: undefined
 }
 
 export type AssetsStackParamList = {

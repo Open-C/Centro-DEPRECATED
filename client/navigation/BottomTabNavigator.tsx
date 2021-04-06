@@ -12,9 +12,10 @@ import HomeScreen from '../screens/HomeScreen'
 import MoolaMarketScreen from '../screens/MoolaMarketScreen'
 import MentoScreen from '../screens/MentoScreen'
 import BlockExplorerScreen from '../screens/BlockExplorerScreen'
+import CentroPayScreen from '../screens/CentroPayScreen'
 import UbeswapScreen from '../screens/UbeswapScreen'
-import PoofCashScreen from '../screens/PoofCashScreen'
 import PollenScreen from '../screens/PollenScreen'
+import PoofCashScreen from '../screens/PoofCashScreen'
 import AssetsScreen from '../screens/AssetsScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 
@@ -41,9 +42,9 @@ function HomeStackNavigator() {
 				options={{ headerTitle: 'Mento' }}
 			/>
 			<HomeStack.Screen
-				name="BlockExplorerScreen"
-				component={BlockExplorerScreen}
-				options={{ headerTitle: 'Celo Block Explorer' }}
+				name="CentroPayScreen"
+				component={CentroPayScreen}
+				options={{ headerTitle: 'Centro Pay' }}
 			/>
 			<HomeStack.Screen
 				name="UbeswapScreen"
@@ -51,14 +52,19 @@ function HomeStackNavigator() {
 				options={{ headerTitle: 'Ubeswap' }}
 			/>
 			<HomeStack.Screen
-				name="PoofCashScreen"
-				component={PoofCashScreen}
-				options={{ headerTitle: 'PoofCash' }}
+				name="BlockExplorerScreen"
+				component={BlockExplorerScreen}
+				options={{ headerTitle: 'Celo Block Explorer' }}
 			/>
 			<HomeStack.Screen
 				name="PollenScreen"
 				component={PollenScreen}
 				options={{ headerTitle: 'Pollen' }}
+			/>
+			<HomeStack.Screen
+				name="PoofCashScreen"
+				component={PoofCashScreen}
+				options={{ headerTitle: 'PoofCash' }}
 			/>
 
 		</HomeStack.Navigator>
