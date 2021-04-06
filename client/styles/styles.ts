@@ -71,4 +71,11 @@ export const layout = StyleSheet.create({
 		height: 1,
 		width: '100%',
 	},
+	card: {
+		borderRadius: 16,
+		padding: 16
+	},
+	container: {
+		padding: 16
+	}
 })
