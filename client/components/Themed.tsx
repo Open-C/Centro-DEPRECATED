@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { Text as DefaultText, View as DefaultView } from 'react-native'
+import { Text as DefaultText, View } from 'react-native'
 
-import Colors from '../constants/Colors'
+import { themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
 
 export function useThemeColor(
 	props: { light?: string; dark?: string },
-	colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+	colorName: keyof typeof themes.light & keyof typeof themes.dark
 ) {
 	const theme = useColorScheme()
 	const colorFromProps = props[theme]
@@ -14,7 +14,7 @@ export function useThemeColor(
 	if (colorFromProps) {
 		return colorFromProps
 	} else {
-		return Colors[theme][colorName]
+		return themes[theme][colorName]
 	}
 }
 
@@ -24,7 +24,7 @@ type ThemeProps = {
 }
 
 export type TextProps = ThemeProps & DefaultText['props']
-export type ViewProps = ThemeProps & DefaultView['props']
+export type ViewProps = ThemeProps & View['props']
 
 export function Text(props: TextProps) {
 	const { style, lightColor, darkColor, ...otherProps } = props
@@ -33,9 +33,16 @@ export function Text(props: TextProps) {
 	return <DefaultText style={[{ color }, style]} {...otherProps} />
 }
 
-export function View(props: ViewProps) {
+export function Container(props: ViewProps) {
 	const { style, lightColor, darkColor, ...otherProps } = props
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background')
 
-	return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />
+	return <View style={[{ backgroundColor }, style]} {...otherProps} />
+}
+
+export function Separator(props: ViewProps) {
+	const { style, lightColor, darkColor, ...otherProps } = props
+	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'separator')
+
+	return <View style={[{ backgroundColor }, style]} {...otherProps} />
 }

@@ -1,14 +1,16 @@
-import { FontAwesome5, Ionicons } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
 
-import Colors from '../constants/Colors'
+import { themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack'
+import { BottomTabParamList, HomeStackParamList, AssetsStackParamList, SettingsStackParamList } from './types'
+
+import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 import HomeScreen from '../screens/HomeScreen'
 import AssetsScreen from '../screens/AssetsScreen'
 import SettingsScreen from '../screens/SettingsScreen'
-import { BottomTabParamList, HomeStackParamList, AssetsStackParamList, SettingsStackParamList } from './types'
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
@@ -65,7 +67,7 @@ export default function BottomTabNavigator() {
 	return (
 		<BottomTab.Navigator
 			initialRouteName="HomeTab"
-			tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+			tabBarOptions={{ activeTintColor: themes[colorScheme].tint }}>
 			<BottomTab.Screen
 				name="Home"
 				component={HomeStackNavigator}
