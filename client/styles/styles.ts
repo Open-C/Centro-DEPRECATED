@@ -27,14 +27,29 @@ export const themes = {
 export const text = StyleSheet.create({
 	h1: {
 		fontSize: 20,
-		fontWeight: 'bold',
+		lineHeight: 20 * 1.5,
+		fontWeight: 'bold'
 	},
 	h2: {
-		fontSize: 16,
-		fontWeight: 'bold',
+		fontSize: 18,
+		lineHeight: 18 * 1.5,
+		fontWeight: 'bold'
+	},
+	h3: {
+		fontSize: 15,
+		lineHeight: 15 * 1.5,
 	},
 	p: {
-		fontSize: 12
+		fontSize: 13,
+		lineHeight: 14 * 1.1,
+	},
+	caption: {
+		fontSize: 11,
+		lineHeight: 11 * 1.1,
+		opacity: 0.8
+	},
+	strong: {
+		fontWeight: 'bold'
 	},
 	code: {
 		fontFamily: 'space-mono'
@@ -45,26 +60,30 @@ export const text = StyleSheet.create({
 export const layout = StyleSheet.create({
 	column: {
 		display: 'flex',
-		flexDirection: 'row',
+		flexDirection: 'column',
 		justifyContent: 'flex-start',
 	},
 	row: {
 		display: 'flex',
-		flexDirection: 'column',
+		flexDirection: 'row',
 	},
 	grid: {
 		display: 'flex',
-		flexDirection: 'column',
-		flexWrap: 'wrap'
+		flexDirection: 'row',
+		justifyContent: 'center',
+		flexWrap: 'wrap',
+		margin: -7
 	},
 	gridItem: {
-		flexBasis: 200,
-		height: 200
+		width: 140,
+		flexBasis: 140,
+		height: 140,
+		margin: 7
 	},
 	centered: {
-		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		textAlign: 'center'
 	},
 	hr: {
 		marginVertical: 20,
@@ -73,9 +92,14 @@ export const layout = StyleSheet.create({
 	},
 	card: {
 		borderRadius: 16,
-		padding: 16
+		padding: 16,
+		maxWidth: '100%'
 	},
 	container: {
 		padding: 16
+	},
+	bordered: {
+		borderWidth: 2,
+		borderColor: 'rgba(0, 0, 0, 0.1)'
 	}
 })

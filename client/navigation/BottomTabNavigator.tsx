@@ -9,6 +9,12 @@ import { BottomTabParamList, HomeStackParamList, AssetsStackParamList, SettingsS
 
 import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 import HomeScreen from '../screens/HomeScreen'
+import MoolaMarketScreen from '../screens/MoolaMarketScreen'
+import MentoScreen from '../screens/MentoScreen'
+import BlockExplorerScreen from '../screens/BlockExplorerScreen'
+import UbeswapScreen from '../screens/UbeswapScreen'
+import PoofCashScreen from '../screens/PoofCashScreen'
+import PollenScreen from '../screens/PollenScreen'
 import AssetsScreen from '../screens/AssetsScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 
@@ -24,6 +30,37 @@ function HomeStackNavigator() {
 				component={HomeScreen}
 				options={{ headerTitle: 'Centro DeFi Wallet' }}
 			/>
+			<HomeStack.Screen
+				name="MoolaMarketScreen"
+				component={MoolaMarketScreen}
+				options={{ headerTitle: 'MoolaMarket' }}
+			/>
+			<HomeStack.Screen
+				name="MentoScreen"
+				component={MentoScreen}
+				options={{ headerTitle: 'Mento' }}
+			/>
+			<HomeStack.Screen
+				name="BlockExplorerScreen"
+				component={BlockExplorerScreen}
+				options={{ headerTitle: 'Celo Block Explorer' }}
+			/>
+			<HomeStack.Screen
+				name="UbeswapScreen"
+				component={UbeswapScreen}
+				options={{ headerTitle: 'Ubeswap' }}
+			/>
+			<HomeStack.Screen
+				name="PoofCashScreen"
+				component={PoofCashScreen}
+				options={{ headerTitle: 'PoofCash' }}
+			/>
+			<HomeStack.Screen
+				name="PollenScreen"
+				component={PollenScreen}
+				options={{ headerTitle: 'Pollen' }}
+			/>
+
 		</HomeStack.Navigator>
 	)
 }

@@ -9,6 +9,12 @@ export default {
 					HomeTab: {
 						screens: {
 							HomeScreen: 'home',
+							MoolaMarketScreen: 'moolamarket',
+							MentoScreen: 'mento',
+							BlockExplorerScreen: 'explorer',
+							UbeswapScreen: 'ubeswap',
+							PoofCashScreen: 'poofcash',
+							PollenScreen: 'pollen',
 						},
 					},
 					AssetsTab: {
