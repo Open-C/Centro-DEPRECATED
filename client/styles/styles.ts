@@ -83,6 +83,10 @@ export const layout = StyleSheet.create({
 		height: 140,
 		margin: 7
 	},
+	full: {
+		flex: 1,
+		alignSelf: 'stretch'
+	},
 	centered: {
 		alignItems: 'center',
 		justifyContent: 'center'

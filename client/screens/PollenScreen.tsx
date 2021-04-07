@@ -2,18 +2,15 @@ import * as React from 'react'
 
 import { layout, text } from '../styles/styles'
 
-import { ScrollView, View } from 'react-native'
-import { Container, Separator, Text } from '../components/ThemedComponents'
+import { View } from 'react-native'
+import { Image, Spacer, Text } from '../components/ThemedComponents'
 
 export default function PollenScreen() {
 	return (
-		<ScrollView>
-			<View style={layout.column}>
-				<Container style={layout.centered}>
-					<Text style={text.h1}>Pollen</Text>
-					<Separator />
-				</Container>
-			</View>
-		</ScrollView>
+		<View style={[layout.centered, layout.full]}>
+			<Image source={require('../assets/images/pollen-thumbnail.png')} style={{height: 100}}></Image>
+			<Spacer />
+			<Text style={text.p}>Coming Soon!</Text>
+		</View>
 	)
 }
