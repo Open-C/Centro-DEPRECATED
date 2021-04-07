@@ -53,6 +53,9 @@ export const text = StyleSheet.create({
 	},
 	code: {
 		fontFamily: 'space-mono'
+	},
+	center: {
+		textAlign: 'center'
 	}
 })
 
@@ -82,8 +85,7 @@ export const layout = StyleSheet.create({
 	},
 	centered: {
 		alignItems: 'center',
-		justifyContent: 'center',
-		textAlign: 'center'
+		justifyContent: 'center'
 	},
 	hr: {
 		marginVertical: 20,

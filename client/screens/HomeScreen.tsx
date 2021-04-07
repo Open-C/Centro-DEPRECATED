@@ -23,7 +23,7 @@ const dapps = [{
 }, {
 	image: '',
 	name: ['centro', 'pay'],
-	description: 'limit orders for\nthe Celo exprichange',
+	description: 'send and receive\nmoney on the go',
 	navigationLink: 'CentroPayScreen'
 }, {
 	image: '',
@@ -58,14 +58,14 @@ export default function HomeScreen({ navigation }: StackScreenProps<HomeStackPar
 				<Separator />
 				<View style={layout.grid}>
 					{ dapps.map(({image, name, description, navigationLink}) => (
-						<TouchableOpacity onPress={() => navigation.navigate(navigationLink as keyof HomeStackParamList)}>
+						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof HomeStackParamList)}>
 							<Card style={[layout.gridItem, layout.centered, layout.bordered]}>
 								{/* <Image source={image} /> */}
 								<Text style={text.h3}>
 									<Text style={text.strong}>{name[0]}</Text>
 									{name[1]}
 								</Text>
-								<Text style={text.caption}>
+								<Text style={[text.caption, text.center]}>
 									{description}
 								</Text>
 							</Card>
