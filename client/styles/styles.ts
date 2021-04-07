@@ -103,5 +103,13 @@ export const layout = StyleSheet.create({
 	bordered: {
 		borderWidth: 2,
 		borderColor: 'rgba(0, 0, 0, 0.1)'
+	},
+	shadowed: {
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 5,
+		elevation: 5
 	}
 })

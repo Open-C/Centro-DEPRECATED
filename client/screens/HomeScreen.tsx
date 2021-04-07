@@ -11,35 +11,59 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
 const dapps = [{
-	image: '',
+	image: require('../assets/images/moola-thumbnail.png'),
 	name: ['moola', 'market'],
 	description: 'earn interest on\ncUSD & cEUR',
-	navigationLink: 'MoolaMarketScreen'
+	navigationLink: 'MoolaMarketScreen',
+	theme: {
+		backgroundColor: 'hsl(135, 90%, 90%)',
+		color: 'hsl(134, 50%, 48%)'
+	}
 }, {
-	image: '',
+	image: require('../assets/images/mento-thumbnail.png'),
 	name: ['celo', 'mento'],
 	description: 'limit orders for\nthe Celo exchange',
-	navigationLink: 'MentoScreen'
+	navigationLink: 'MentoScreen',
+	theme: {
+		backgroundColor: 'hsl(180, 90%, 90%)',
+		color: 'hsl(180, 97%, 39%)'
+	}
 }, {
-	image: '',
+	image: require('../assets/images/centropay-thumbnail.png'),
 	name: ['centro', 'pay'],
 	description: 'send and receive\nmoney on the go',
-	navigationLink: 'CentroPayScreen'
+	navigationLink: 'CentroPayScreen',
+	theme: {
+		backgroundColor: 'hsl(200, 90%, 90%)',
+		color: 'hsl(200, 50%, 50%)'
+	}
 }, {
-	image: '',
+	image: require('../assets/images/ubeswap-thumbnail.png'),
 	name: ['ube', 'swap'],
 	description: 'swap between\nERC-20 tokens',
-	navigationLink: 'UbeswapScreen'
+	navigationLink: 'UbeswapScreen',
+	theme: {
+		backgroundColor: 'hsl(249, 39%, 93%)',
+		color: 'hsl(249, 90%, 70%)'
+	}
 }, {
-	image: '',
+	image: require('../assets/images/blockexplorer-thumbnail.png'),
 	name: ['block', 'explorer'],
-	description: 'view balances\nand transactions',
-	navigationLink: 'BlockExplorerScreen'
+	description: 'view transactions\nand balances',
+	navigationLink: 'BlockExplorerScreen',
+	theme: {
+		backgroundColor: 'hsl(0, 18%, 91%)',
+		color: 'hsl(0, 0%, 44%)'
+	}
 }, {
-	image: '',
+	image: require('../assets/images/pollen-thumbnail.png'),
 	name: ['pollen', 'hives'],
-	description: 'save and lend\nwith trusted peers',
-	navigationLink: 'PollenScreen'
+	description: 'save and lend with\ntrusted peers',
+	navigationLink: 'PollenScreen',
+	theme: {
+		backgroundColor: 'hsl(50, 96%, 90%)',
+		color: 'hsl(52, 77%, 45%)'
+	}
 }, /*{
 	image: '',
 	name: ['poof', 'cash'],
@@ -57,15 +81,15 @@ export default function HomeScreen({ navigation }: StackScreenProps<HomeStackPar
 				</View>
 				<Separator />
 				<View style={layout.grid}>
-					{ dapps.map(({image, name, description, navigationLink}) => (
+					{ dapps.map(({image, name, description, navigationLink, theme}) => (
 						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof HomeStackParamList)}>
-							<Card style={[layout.gridItem, layout.centered, layout.bordered]}>
-								{/* <Image source={image} /> */}
-								<Text style={text.h3}>
-									<Text style={text.strong}>{name[0]}</Text>
+							<Card style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {backgroundColor: theme.backgroundColor, borderColor: theme.color, shadowColor: theme.color}]}>
+								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} resizeMode="contain" />
+								<Text style={[{color: theme.color}, text.h3]}>
+									<Text style={[{color: theme.color}, text.strong]}>{name[0]}</Text>
 									{name[1]}
 								</Text>
-								<Text style={[text.caption, text.center]}>
+								<Text style={[{color: theme.color}, text.caption, text.center]}>
 									{description}
 								</Text>
 							</Card>
