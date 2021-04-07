@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { themes } from '../styles/styles'
+import { text, themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -19,54 +19,76 @@ import PoofCashScreen from '../screens/PoofCashScreen'
 import AssetsScreen from '../screens/AssetsScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 
+import { Image, Text } from '../components/ThemedComponents'
+
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const HomeStack = createStackNavigator<HomeStackParamList>()
 
 function HomeStackNavigator() {
 	return (
-		<HomeStack.Navigator>
+		<HomeStack.Navigator screenOptions={{
+			headerStyle: {
+				height: 100
+			}
+		}}>
 			<HomeStack.Screen
-				name="HomeScreen"
+				name="Home"
 				component={HomeScreen}
-				options={{ headerTitle: 'Centro DeFi Wallet' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Centro DeFi Wallet</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="MoolaMarketScreen"
 				component={MoolaMarketScreen}
-				options={{ headerTitle: 'MoolaMarket' }}
+				options={{
+					headerTitle: props => <Image source={require('../assets/images/moola-logo.png')} style={{height: '60%'}} />,
+					// headerBackTitle: 'Home'
+				}}
 			/>
 			<HomeStack.Screen
 				name="MentoScreen"
 				component={MentoScreen}
-				options={{ headerTitle: 'Mento' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Mento</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="CentroPayScreen"
 				component={CentroPayScreen}
-				options={{ headerTitle: 'Centro Pay' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Centro Pay</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="UbeswapScreen"
 				component={UbeswapScreen}
-				options={{ headerTitle: 'Ubeswap' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Ubeswap</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="BlockExplorerScreen"
 				component={BlockExplorerScreen}
-				options={{ headerTitle: 'Celo Block Explorer' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Block Explorer</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="PollenScreen"
 				component={PollenScreen}
-				options={{ headerTitle: 'Pollen' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Pollen</Text>
+				}}
 			/>
 			<HomeStack.Screen
 				name="PoofCashScreen"
 				component={PoofCashScreen}
-				options={{ headerTitle: 'PoofCash' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>PoofCash</Text>
+				}}
 			/>
-
 		</HomeStack.Navigator>
 	)
 }
@@ -80,7 +102,9 @@ function AssetsStackNavigator() {
 			<AssetsStack.Screen
 				name="AssetsScreen"
 				component={AssetsScreen}
-				options={{ headerTitle: 'Assets' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Assets</Text>
+				}}
 			/>
 		</AssetsStack.Navigator>
 	)
@@ -95,7 +119,9 @@ function SettingsStackNavigator() {
 			<SettingsStack.Screen
 				name="SettingsScreen"
 				component={SettingsScreen}
-				options={{ headerTitle: 'Settings' }}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Settings</Text>
+				}}
 			/>
 		</SettingsStack.Navigator>
 	)

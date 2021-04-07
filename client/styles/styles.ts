@@ -26,8 +26,8 @@ export const themes = {
 
 export const text = StyleSheet.create({
 	h1: {
-		fontSize: 20,
-		lineHeight: 20 * 1.5,
+		fontSize: 24,
+		lineHeight: 24 * 1.2,
 		fontWeight: 'bold'
 	},
 	h2: {
