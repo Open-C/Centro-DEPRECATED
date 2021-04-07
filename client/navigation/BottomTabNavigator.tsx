@@ -115,21 +115,21 @@ export default function BottomTabNavigator() {
 				name="Home"
 				component={HomeStackNavigator}
 				options={{
-					tabBarIcon: ({ color }) => <Ionicons size={30} name="home-outline" color={color} />,
+					tabBarIcon: ({ color }) => <Ionicons size={26} name="home-outline" color={color} />,
 				}}
 			/>
 			<BottomTab.Screen
 				name="Assets"
 				component={AssetsStackNavigator}
 				options={{
-					tabBarIcon: ({ color }) => <FontAwesome5 size={30} name="coins" color={color} />,
+					tabBarIcon: ({ color }) => <FontAwesome5 size={26} name="coins" color={color} />,
 				}}
 			/>
 			<BottomTab.Screen
 				name="Settings"
 				component={SettingsStackNavigator}
 				options={{
-					tabBarIcon: ({ color }) => <Ionicons size={30} name="settings-outline" color={color} />,
+					tabBarIcon: ({ color }) => <Ionicons size={26} name="settings-outline" color={color} />,
 				}}
 			/>
 		</BottomTab.Navigator>
