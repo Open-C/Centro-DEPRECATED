@@ -87,6 +87,10 @@ export const layout = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
+	img: {
+		maxWidth: '100%',
+		maxHeight: '100%'
+	},
 	hr: {
 		marginVertical: 20,
 		height: 1,

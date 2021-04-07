@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text as DefaultText, View } from 'react-native'
+import { Text as DefaultText, View, Image as DefaultImage } from 'react-native'
 
 import { layout, themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
@@ -25,6 +25,7 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText['props']
 export type ViewProps = ThemeProps & View['props']
+export type ImageProps = ThemeProps & DefaultImage['props']
 
 export function Text({ style, lightColor, darkColor, ...props }: TextProps) {
 	const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text')
@@ -61,5 +62,13 @@ export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
 export function Separator({ style, lightColor, darkColor, ...props }: ViewProps) {
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'separator')
 
-	return <View style={[{ backgroundColor }, style]} {...props} />
+	return <View style={[layout.hr, style, { backgroundColor }]} {...props} />
+}
+
+export function Spacer() {
+	return <View style={{ marginTop: 32 }} />
+}
+
+export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
+	return <DefaultImage style={[layout.img, style]} resizeMode={resizeMode} {...props} />
 }

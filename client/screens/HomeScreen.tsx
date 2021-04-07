@@ -5,8 +5,8 @@ import { HomeStackParamList } from '../navigation/types'
 
 import { layout, text } from '../styles/styles'
 
-import { Image, ScrollView, View } from 'react-native'
-import { Card, Container, Separator, Text } from '../components/ThemedComponents'
+import { ScrollView, View } from 'react-native'
+import { Card, Container, Image, Separator, Text } from '../components/ThemedComponents'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
@@ -76,15 +76,11 @@ export default function HomeScreen({ navigation }: StackScreenProps<HomeStackPar
 	return (
 		<ScrollView>
 			<View style={layout.column}>
-				<View style={layout.centered}>
-					<Text style={text.h1}>Centro DeFi Wallet</Text>
-				</View>
-				<Separator />
 				<View style={layout.grid}>
 					{ dapps.map(({image, name, description, navigationLink, theme}) => (
 						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof HomeStackParamList)}>
 							<Card style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {backgroundColor: theme.backgroundColor, borderColor: theme.color, shadowColor: theme.color}]}>
-								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} resizeMode="contain" />
+								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} />
 								<Text style={[{color: theme.color}, text.h3]}>
 									<Text style={[{color: theme.color}, text.strong]}>{name[0]}</Text>
 									{name[1]}
