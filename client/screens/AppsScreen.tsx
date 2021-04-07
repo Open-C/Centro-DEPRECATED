@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { StackScreenProps } from '@react-navigation/stack'
-import { HomeStackParamList } from '../navigation/types'
+import { AppsStackParamList } from '../navigation/types'
 
 import { layout, text } from '../styles/styles'
 
@@ -72,13 +72,13 @@ const dapps = [{
 }*/]
 
 
-export default function HomeScreen({ navigation }: StackScreenProps<HomeStackParamList, 'HomeScreen'>) {
+export default function AppsScreen({ navigation }: StackScreenProps<AppsStackParamList, 'AppsScreen'>) {
 	return (
 		<ScrollView>
 			<View style={layout.column}>
 				<View style={layout.grid}>
 					{ dapps.map(({image, name, description, navigationLink, theme}) => (
-						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof HomeStackParamList)}>
+						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof AppsStackParamList)}>
 							<Card style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {backgroundColor: theme.backgroundColor, borderColor: theme.color, shadowColor: theme.color}]}>
 								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} />
 								<Text style={[{color: theme.color}, text.h3]}>

@@ -6,9 +6,14 @@ export default {
 		screens: {
 			Root: {
 				screens: {
-					HomeTab: {
+					AssetsTab: {
 						screens: {
-							HomeScreen: 'home',
+							AssetsScreen: 'wallet',
+						},
+					},
+					AppsTab: {
+						screens: {
+							AppsScreen: 'home',
 							MoolaMarketScreen: 'moolamarket',
 							MentoScreen: 'mento',
 							CentroPayScreen: 'pay',
@@ -16,11 +21,6 @@ export default {
 							BlockExplorerScreen: 'explorer',
 							PollenScreen: 'pollen',
 							PoofCashScreen: 'poofcash',
-						},
-					},
-					AssetsTab: {
-						screens: {
-							AssetsScreen: 'assets',
 						},
 					},
 					SettingsTab: {

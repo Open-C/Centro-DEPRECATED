@@ -4,13 +4,17 @@ export type RootStackParamList = {
 }
 
 export type BottomTabParamList = {
-	HomeTab: undefined
 	AssetsTab: undefined
+	AppsTab: undefined
 	SettingsTab: undefined
 }
 
-export type HomeStackParamList = {
-	HomeScreen: undefined
+export type AssetsStackParamList = {
+	AssetsScreen: undefined
+}
+
+export type AppsStackParamList = {
+	AppsScreen: undefined
 	MoolaMarketScreen: undefined
 	MentoScreen: undefined
 	CentroPayScreen: undefined
@@ -18,10 +22,6 @@ export type HomeStackParamList = {
 	BlockExplorerScreen: undefined
 	PollenScreen: undefined
 	PoofCashScreen: undefined
-}
-
-export type AssetsStackParamList = {
-	AssetsScreen: undefined
 }
 
 export type SettingsStackParamList = {
