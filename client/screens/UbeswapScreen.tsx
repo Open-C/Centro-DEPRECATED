@@ -1,19 +1,12 @@
 import * as React from 'react'
 
-import { layout, text } from '../styles/styles'
+import { WebView } from 'react-native-webview'
 
-import { ScrollView, View } from 'react-native'
-import { Container, Separator, Text } from '../components/ThemedComponents'
+export default function BlockExplorerScreen() {
+	const uri =
+		`https://app.ubeswap.org`
 
-export default function UbeswapScreen() {
 	return (
-		<ScrollView>
-			<View style={layout.column}>
-				<Container style={layout.centered}>
-					<Text style={text.h1}>Ubeswap</Text>
-					<Separator />
-				</Container>
-			</View>
-		</ScrollView>
+		<WebView source={{ uri }} />
 	)
 }
