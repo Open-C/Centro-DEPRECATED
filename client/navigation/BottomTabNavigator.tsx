@@ -27,7 +27,11 @@ const AssetsStack = createStackNavigator<AssetsStackParamList>()
 
 function AssetsStackNavigator() {
 	return (
-		<AssetsStack.Navigator>
+		<AssetsStack.Navigator screenOptions={{
+			headerStyle: {
+				height: 100
+			}
+		}}>
 			<AssetsStack.Screen
 				name="AssetsScreen"
 				component={AssetsScreen}
@@ -116,7 +120,11 @@ const SettingsStack = createStackNavigator<SettingsStackParamList>()
 
 function SettingsStackNavigator() {
 	return (
-		<SettingsStack.Navigator>
+		<SettingsStack.Navigator screenOptions={{
+			headerStyle: {
+				height: 100
+			}
+		}}>
 			<SettingsStack.Screen
 				name="SettingsScreen"
 				component={SettingsScreen}
