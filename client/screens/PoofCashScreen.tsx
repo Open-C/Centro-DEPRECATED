@@ -8,12 +8,10 @@ import { Container, Separator, Text } from '../components/ThemedComponents'
 export default function PoofCashScreen() {
 	return (
 		<ScrollView>
-			<View style={layout.column}>
-				<Container style={layout.centered}>
-					<Text style={text.h1}>PoofCash</Text>
-					<Separator />
-				</Container>
-			</View>
+			<Container style={layout.centered}>
+				<Text style={text.h1}>PoofCash</Text>
+				<Separator />
+			</Container>
 		</ScrollView>
 	)
 }

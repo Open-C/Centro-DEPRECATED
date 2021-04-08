@@ -6,7 +6,7 @@ import { AppsStackParamList } from '../navigation/types'
 import { layout, text } from '../styles/styles'
 
 import { ScrollView, View } from 'react-native'
-import { Card, Container, Image, Separator, Text } from '../components/ThemedComponents'
+import { Card, Container, Image, Spacer, Text } from '../components/ThemedComponents'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
@@ -75,15 +75,15 @@ const dapps = [{
 export default function AppsScreen({ navigation }: StackScreenProps<AppsStackParamList, 'AppsScreen'>) {
 	return (
 		<ScrollView>
-			<View style={layout.column}>
+			<Container>
 				<View style={layout.grid}>
 					{ dapps.map(({image, name, description, navigationLink, theme}) => (
 						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof AppsStackParamList)}>
 							<Card style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {backgroundColor: theme.backgroundColor, borderColor: theme.color, shadowColor: theme.color}]}>
 								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} />
 								<Text style={[{color: theme.color}, text.h3]}>
-									<Text style={[{color: theme.color}, text.strong]}>{name[0]}</Text>
-									{name[1]}
+									<Text style={[{color: theme.color}]}>{name[0]}</Text>
+									<Text style={[{color: theme.color, fontWeight: 'normal'}]}>{name[1]}</Text>
 								</Text>
 								<Text style={[{color: theme.color}, text.caption, text.center]}>
 									{description}
@@ -92,7 +92,7 @@ export default function AppsScreen({ navigation }: StackScreenProps<AppsStackPar
 						</TouchableOpacity>
 					)) }
 				</View>
-			</View>
+			</Container>
 		</ScrollView>
 	)
 }

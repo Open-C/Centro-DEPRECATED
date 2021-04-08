@@ -7,19 +7,19 @@ const tintColorDark = '#fff'
 export const themes = {
 	light: {
 		text: '#000',
-		background: '#fff',
+		cardBackground: 'hsla(0, 0%, 100%, 100%)',
 		tint: tintColorLight,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorLight,
-		separator: '#eee',
+		separator: 'hsla(0, 0%, 0%, 0.1)',
 	},
 	dark: {
 		text: '#fff',
-		background: '#000',
+		cardBackground: 'hsla(0, 0%, 100%, 0.125)',
 		tint: tintColorDark,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorDark,
-		separator: 'rgba(255,255,255,0.1)',
+		separator: 'hsla(0, 0%, 100%, 0.1)',
 	},
 }
 
@@ -31,13 +31,14 @@ export const text = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	h2: {
-		fontSize: 18,
-		lineHeight: 18 * 1.5,
+		fontSize: 20,
+		lineHeight: 20 * 1.5,
 		fontWeight: 'bold'
 	},
 	h3: {
 		fontSize: 16,
 		lineHeight: 16 * 1.5,
+		fontWeight: 'bold'
 	},
 	p: {
 		fontSize: 15,
@@ -69,6 +70,7 @@ export const layout = StyleSheet.create({
 	row: {
 		display: 'flex',
 		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	grid: {
 		display: 'flex',
@@ -100,13 +102,31 @@ export const layout = StyleSheet.create({
 		height: 1,
 		width: '100%',
 	},
+	spacer: {
+		width: 0,
+		height: 0,
+		margin: 6
+	},
 	card: {
 		borderRadius: 16,
 		padding: 16,
 		maxWidth: '100%'
 	},
-	container: {
+	cardList: {
+		margin: -16,
+	},
+	listItem: {
+		paddingVertical: 16
+	},
+	listSeparator: {
+		height: 1,
+		marginHorizontal: 16
+	},
+	cardListItem: {
 		padding: 16
+	},
+	container: {
+		padding: 32
 	},
 	bordered: {
 		borderWidth: 2,
@@ -115,9 +135,9 @@ export const layout = StyleSheet.create({
 	shadowed: {
 		shadowOffset: {
 			width: 0,
-			height: 2
+			height: 1
 		},
-		shadowRadius: 5,
-		elevation: 5
+		shadowRadius: 3,
+		elevation: 3
 	}
 })

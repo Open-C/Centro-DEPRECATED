@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text as DefaultText, View, Image as DefaultImage } from 'react-native'
 
-import { layout, themes } from '../styles/styles'
+import { layout, text, themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
 
 export function useThemeColor(
@@ -34,23 +34,14 @@ export function Text({ style, lightColor, darkColor, ...props }: TextProps) {
 }
 
 export function Container({ style, lightColor, darkColor, ...props }: ViewProps) {
-	return <View
-		style={[
-			{
-				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'background')
-			},
-			layout.container,
-			style
-		]}
-		{...props}
-	/>
+	return <View style={[layout.container, layout.column, style]} {...props} />
 }
 
 export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
 	return <View
 		style={[
 			{
-				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'background')
+				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground')
 			},
 			layout.card,
 			style
@@ -65,8 +56,14 @@ export function Separator({ style, lightColor, darkColor, ...props }: ViewProps)
 	return <View style={[layout.hr, style, { backgroundColor }]} {...props} />
 }
 
+export function ListSeparator({ style, lightColor, darkColor, ...props }: ViewProps) {
+	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'separator')
+
+	return <View style={[layout.listSeparator, style, { backgroundColor }]} {...props} />
+}
+
 export function Spacer() {
-	return <View style={{ marginTop: 32 }} />
+	return <View style={layout.spacer} />
 }
 
 export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {

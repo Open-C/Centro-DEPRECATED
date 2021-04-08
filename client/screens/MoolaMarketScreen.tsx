@@ -8,12 +8,10 @@ import { Container, Separator, Text } from '../components/ThemedComponents'
 export default function MoolaMarketScreen() {
 	return (
 		<ScrollView>
-			<View style={layout.column}>
-				<Container style={layout.centered}>
-					<Text style={text.h1}>MoolaMarket</Text>
-					<Separator />
-				</Container>
-			</View>
+			<Container style={layout.centered}>
+				<Text style={text.h1}>MoolaMarket</Text>
+				<Separator />
+			</Container>
 		</ScrollView>
 	)
 }
