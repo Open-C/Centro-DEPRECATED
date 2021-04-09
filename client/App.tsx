@@ -1,10 +1,18 @@
-import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 
+import { Platform, UIManager } from 'react-native'
 import useCachedResources from './hooks/useCachedResources'
 import useColorScheme from './hooks/useColorScheme'
+
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Navigation from './navigation'
+import { StatusBar } from 'expo-status-bar'
+
+if (Platform.OS === 'android') {
+	if (UIManager.setLayoutAnimationEnabledExperimental) {
+		UIManager.setLayoutAnimationEnabledExperimental(true);
+	}
+}
 
 export default function App() {
 	const isLoadingComplete = useCachedResources()
