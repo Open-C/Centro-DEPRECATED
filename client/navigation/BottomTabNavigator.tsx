@@ -21,17 +21,27 @@ import SettingsScreen from '../screens/SettingsScreen'
 
 import { Image, Text } from '../components/ThemedComponents'
 
+
+// const screenOptions = {
+// 	headerStyle: {
+// 		height: 100
+// 	}
+// }
+const screenOptions = {
+	headerStyle: {
+		height: 105
+	},
+	headerStatusBarHeight: 40
+}
+
+
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tabconst AssetsStack = createStackNavigator<AssetsStackParamList>()
 const AssetsStack = createStackNavigator<AssetsStackParamList>()
 
 function AssetsStackNavigator() {
 	return (
-		<AssetsStack.Navigator screenOptions={{
-			headerStyle: {
-				height: 100
-			}
-		}}>
+		<AssetsStack.Navigator screenOptions={screenOptions}>
 			<AssetsStack.Screen
 				name="AssetsScreen"
 				component={AssetsScreen}
@@ -44,16 +54,11 @@ function AssetsStackNavigator() {
 }
 
 
-
 const AppsStack = createStackNavigator<AppsStackParamList>()
 
 function AppsStackNavigator() {
 	return (
-		<AppsStack.Navigator screenOptions={{
-			headerStyle: {
-				height: 100
-			}
-		}}>
+		<AppsStack.Navigator screenOptions={screenOptions}>
 			<AppsStack.Screen
 				name="Apps"
 				component={AppsScreen}
@@ -65,7 +70,7 @@ function AppsStackNavigator() {
 				name="MoolaMarketScreen"
 				component={MoolaMarketScreen}
 				options={{
-					headerTitle: props => <Image source={require('../assets/images/moola-logo.png')} style={{height: '60%'}} />,
+					headerTitle: props => <Image source={require('../assets/images/moola-logo.png')} style={{height: '63%'}} />,
 					// headerBackTitle: 'Apps'
 				}}
 			/>
@@ -120,11 +125,7 @@ const SettingsStack = createStackNavigator<SettingsStackParamList>()
 
 function SettingsStackNavigator() {
 	return (
-		<SettingsStack.Navigator screenOptions={{
-			headerStyle: {
-				height: 100
-			}
-		}}>
+		<SettingsStack.Navigator screenOptions={screenOptions}>
 			<SettingsStack.Screen
 				name="SettingsScreen"
 				component={SettingsScreen}
