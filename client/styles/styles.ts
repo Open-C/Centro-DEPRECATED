@@ -7,7 +7,8 @@ const tintColorDark = '#fff'
 export const themes = {
 	light: {
 		text: '#000',
-		cardBackground: 'hsla(0, 0%, 100%, 100%)',
+		cardBackground: 'hsla(0, 0%, 100%, 1.0)',
+		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
 		tint: tintColorLight,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorLight,
@@ -15,7 +16,8 @@ export const themes = {
 	},
 	dark: {
 		text: '#fff',
-		cardBackground: 'hsla(0, 0%, 100%, 0.125)',
+		cardBackground: 'hsla(0, 0%, 10%, 1.0)',
+		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
 		tint: tintColorDark,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorDark,
@@ -61,6 +63,13 @@ export const text = StyleSheet.create({
 })
 
 
+const containerSpacing = 32
+const cardSpacing = 16
+const listSpacing = 16
+const gridGap = 8
+const gridItemSize = 140
+
+
 export const layout = StyleSheet.create({
 	column: {
 		display: 'flex',
@@ -77,13 +86,13 @@ export const layout = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		flexWrap: 'wrap',
-		margin: -7
+		margin: -gridGap
 	},
 	gridItem: {
-		width: 140,
-		flexBasis: 140,
-		height: 140,
-		margin: 7
+		width: gridItemSize,
+		flexBasis: gridItemSize,
+		height: gridItemSize,
+		margin: gridGap
 	},
 	full: {
 		flex: 1,
@@ -107,26 +116,29 @@ export const layout = StyleSheet.create({
 		height: 0,
 		margin: 6
 	},
+	sectionSpacer: {
+		margin: containerSpacing / 2
+	},
 	card: {
-		borderRadius: 16,
-		padding: 16,
+		borderRadius: cardSpacing,
+		padding: cardSpacing,
 		maxWidth: '100%'
 	},
 	cardList: {
-		margin: -16,
+		margin: -cardSpacing,
 	},
 	listItem: {
-		paddingVertical: 16
+		paddingVertical: listSpacing
 	},
 	listSeparator: {
 		height: 1,
-		marginHorizontal: 16
+		marginHorizontal: listSpacing
 	},
 	cardListItem: {
-		padding: 16
+		padding: cardSpacing
 	},
 	container: {
-		padding: 32
+		padding: containerSpacing
 	},
 	bordered: {
 		borderWidth: 2,
@@ -135,9 +147,10 @@ export const layout = StyleSheet.create({
 	shadowed: {
 		shadowOffset: {
 			width: 0,
-			height: 1
+			height: 3
 		},
 		shadowRadius: 3,
+		shadowOpacity: 0.25,
 		elevation: 3
 	}
 })

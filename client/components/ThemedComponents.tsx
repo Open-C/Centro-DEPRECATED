@@ -41,7 +41,8 @@ export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
 	return <View
 		style={[
 			{
-				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground')
+				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground'),
+				shadowColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
 			},
 			layout.card,
 			style
@@ -64,6 +65,10 @@ export function ListSeparator({ style, lightColor, darkColor, ...props }: ViewPr
 
 export function Spacer() {
 	return <View style={layout.spacer} />
+}
+
+export function SectionSpacer() {
+	return <View style={layout.sectionSpacer} />
 }
 
 export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
