@@ -20,7 +20,7 @@ export default function Toggle({ ToggleComponent, ContentComponent, ...props }: 
 
 	return (
 		<View>
-			<TouchableOpacity onPress={onPress} {...props}>
+			<TouchableOpacity onPress={onPress} onLongPress={onPress} {...props}>
 				<ToggleComponent />
 			</TouchableOpacity>
 			{expanded && <ContentComponent />}
