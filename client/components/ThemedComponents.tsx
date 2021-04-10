@@ -77,10 +77,10 @@ export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
 	return <DefaultImage style={[layout.img, style]} resizeMode={resizeMode} {...props} />
 }
 
-export function Button({ style, children, ...props }: ViewProps){
+export function Button({ style, children, ...props }: TextProps & TouchableOpacity['props']){
 	return (
-		<TouchableOpacity style={[layout.button, style]} {...props}>
-			<Text style={[layout.buttonText]}>{children}</Text>
+		<TouchableOpacity style={[layout.button]} {...props}>
+			<Text style={[style, layout.buttonText]}>{children}</Text>
 		</TouchableOpacity>
 	)
 }
