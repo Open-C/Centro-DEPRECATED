@@ -49,7 +49,7 @@ contract CentroMain is ReentrancyGuard, Types{
         }
     }
 
-    function getWalletBalance(uint256 _wId) view returns (address[] memory, uint256[] memory) {
+    function getWalletBalance(uint256 _wId) view returns (address[] memory tokens, uint256[] memory balances) {
         SmartWallet memory sw = getWallet(_wId);
         return sw.getBasis(msg.sender);
     }
