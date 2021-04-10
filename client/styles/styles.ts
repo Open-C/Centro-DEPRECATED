@@ -63,7 +63,8 @@ export const text = StyleSheet.create({
 })
 
 
-const containerSpacing = 32
+const containerSpacing = 28
+const containerInnerSpacing = 36
 const cardSpacing = 16
 const listSpacing = 16
 const gridGap = 8
@@ -117,7 +118,7 @@ export const layout = StyleSheet.create({
 		margin: 6
 	},
 	sectionSpacer: {
-		margin: containerSpacing / 2
+		margin: containerInnerSpacing / 2
 	},
 	card: {
 		borderRadius: cardSpacing,
@@ -137,6 +138,11 @@ export const layout = StyleSheet.create({
 	cardListItem: {
 		padding: cardSpacing
 	},
+	cardListItemToggleContent: {
+		padding: cardSpacing,
+		paddingTop: 0,
+		justifyContent: 'space-evenly'
+	},
 	container: {
 		padding: containerSpacing
 	},
@@ -152,5 +158,21 @@ export const layout = StyleSheet.create({
 		shadowRadius: 3,
 		shadowOpacity: 0.25,
 		elevation: 3
+	},
+	assetIcon: {
+		width: 45,
+		height: 45
+	},
+	button: {
+		borderRadius: 8,
+		backgroundColor: 'hsla(190, 40%, 90%, 1.0)',
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+	},
+	buttonText: {
+		fontWeight: '600',
+		letterSpacing: 0.5,
+		textTransform: 'uppercase',
+		opacity: 0.6
 	}
 })

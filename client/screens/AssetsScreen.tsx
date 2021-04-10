@@ -3,7 +3,8 @@ import * as React from 'react'
 import { layout, text } from '../styles/styles'
 
 import { FlatList, SectionList, ScrollView, TouchableOpacity, View } from 'react-native'
-import { Card, Container, ListSeparator, Separator, SectionSpacer, Spacer, Text, Image } from '../components/ThemedComponents'
+import { Button, Card, Container, ListSeparator, Separator, SectionSpacer, Spacer, Text, Image } from '../components/ThemedComponents'
+import Toggle from '../components/Toggle'
 
 const sections = [
 	{
@@ -65,18 +66,26 @@ export default function AssetsScreen() {
 								data={data}
 								style={layout.cardList}
 								renderItem={({ item, index, separators }) => (
-									<TouchableOpacity key={item.symbol}>
-										<View style={[layout.cardListItem, layout.row]}>
-											<Image source={item.image} style={layout.assetIcon} />
-											<Spacer />
-											<View style={[layout.column, {flex: 1}]}>
-												<Text style={text.h3}>{item.name}</Text>
-												<Text style={text.caption}>{item.symbol}</Text>
+									<Toggle key={item.symbol}
+										ToggleComponent={() => (
+											<View style={[layout.cardListItem, layout.row]}>
+												<Image source={item.image} style={layout.assetIcon} />
+												<Spacer />
+												<View style={[layout.column, {flex: 1}]}>
+													<Text style={text.h3}>{item.name}</Text>
+													<Text style={text.caption}>{item.symbol}</Text>
+												</View>
+												<Spacer />
+												<Text style={text.strong}>0</Text>
 											</View>
-											<Spacer />
-											<Text style={text.strong}>0</Text>
-										</View>
-									</TouchableOpacity>
+										)}
+										ContentComponent={() => (
+											<View style={[layout.cardListItemToggleContent, layout.row]}>
+												<Button>Deposit</Button>
+												<Button>Withdraw</Button>
+											</View>
+										)}
+									/>
 								)}
 								ItemSeparatorComponent={ListSeparator}
 							/>

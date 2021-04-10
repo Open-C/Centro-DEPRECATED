@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { Text as DefaultText, View, Image as DefaultImage } from 'react-native'
 
 import { layout, text, themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
+
+import { Text as DefaultText, View, Image as DefaultImage } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export function useThemeColor(
 	props: { light?: string; dark?: string },
@@ -73,4 +75,12 @@ export function SectionSpacer() {
 
 export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
 	return <DefaultImage style={[layout.img, style]} resizeMode={resizeMode} {...props} />
+}
+
+export function Button({ style, children, ...props }: ViewProps){
+	return (
+		<TouchableOpacity style={[layout.button, style]} {...props}>
+			<Text style={[layout.buttonText]}>{children}</Text>
+		</TouchableOpacity>
+	)
 }
