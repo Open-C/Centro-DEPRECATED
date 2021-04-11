@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './global'
+
 import { Platform, UIManager } from 'react-native'
 import useCachedResources from './hooks/useCachedResources'
 import useColorScheme from './hooks/useColorScheme'
