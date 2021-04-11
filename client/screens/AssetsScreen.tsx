@@ -5,6 +5,7 @@ import { layout, text } from '../styles/styles'
 import { FlatList, SectionList, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Button, Card, Container, ListSeparator, Separator, SectionSpacer, Spacer, Text, Image } from '../components/ThemedComponents'
 import Toggle from '../components/Toggle'
+import WalletStatus from '../components/WalletStatus'
 
 const sections = [
 	{
@@ -53,15 +54,23 @@ const baseAssets = sections[0].data
 
 export default function AssetsScreen() {
 	return (
-		<ScrollView>
+		<ScrollView style={layout.container}>
+			<View>
+				<Text style={text.h2}>Wallet</Text>
+				<Spacer />
+				<Card style={layout.centered}>
+					<WalletStatus />
+				</Card>
+			</View>
+			<SectionSpacer />
 			<FlatList
-				style={layout.container}
+				style={layout.cardWrapper}
 				data={sections}
 				renderItem={({ item: { title, data } }) => (
 					<View key={title}>
 						<Text style={text.h2}>{title}</Text>
 						<Spacer />
-						<Card style={layout.shadowed}>
+						<Card>
 							<FlatList
 								data={data}
 								style={layout.cardList}

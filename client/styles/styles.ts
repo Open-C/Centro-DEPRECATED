@@ -34,7 +34,7 @@ export const text = StyleSheet.create({
 	},
 	h2: {
 		fontSize: 20,
-		lineHeight: 20 * 1.5,
+		lineHeight: 20 * 1.3,
 		fontWeight: 'bold'
 	},
 	h3: {
@@ -43,8 +43,8 @@ export const text = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	p: {
-		fontSize: 15,
-		lineHeight: 15 * 1.1,
+		fontSize: 16,
+		lineHeight: 16 * 1.3,
 	},
 	caption: {
 		fontSize: 11,
@@ -69,7 +69,7 @@ const cardSpacing = 16
 const listSpacing = 16
 const gridGap = 8
 const gridItemSize = 140
-
+const cardShadowDepth = 3
 
 export const layout = StyleSheet.create({
 	column: {
@@ -120,10 +120,21 @@ export const layout = StyleSheet.create({
 	sectionSpacer: {
 		margin: containerInnerSpacing / 2
 	},
+	cardWrapper: {
+		margin: -cardShadowDepth * 2,
+		padding: cardShadowDepth * 2
+	},
 	card: {
 		borderRadius: cardSpacing,
 		padding: cardSpacing,
-		maxWidth: '100%'
+		maxWidth: '100%',
+		shadowOffset: {
+			width: 0,
+			height: cardShadowDepth
+		},
+		shadowRadius: cardShadowDepth,
+		shadowOpacity: 0.25,
+		elevation: cardShadowDepth
 	},
 	cardList: {
 		margin: -cardSpacing,
@@ -149,15 +160,6 @@ export const layout = StyleSheet.create({
 	bordered: {
 		borderWidth: 2,
 		borderColor: 'rgba(0, 0, 0, 0.1)'
-	},
-	shadowed: {
-		shadowOffset: {
-			width: 0,
-			height: 3
-		},
-		shadowRadius: 3,
-		shadowOpacity: 0.25,
-		elevation: 3
 	},
 	assetIcon: {
 		width: 45,

@@ -40,17 +40,21 @@ export function Container({ style, lightColor, darkColor, ...props }: ViewProps)
 }
 
 export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
-	return <View
-		style={[
-			{
-				backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground'),
-				shadowColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
-			},
-			layout.card,
-			style
-		]}
-		{...props}
-	/>
+	return (
+		<View style={layout.cardWrapper}>
+			<View
+				style={[
+					{
+						backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground'),
+						shadowColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
+					},
+					layout.card,
+					style
+				]}
+				{...props}
+			/>
+		</View>
+	)
 }
 
 export function Separator({ style, lightColor, darkColor, ...props }: ViewProps) {
