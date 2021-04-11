@@ -26,6 +26,7 @@ export default {
 					SettingsTab: {
 						screens: {
 							SettingsScreen: 'settings',
+							WalletsScreen: 'wallets'
 						},
 					},
 				},

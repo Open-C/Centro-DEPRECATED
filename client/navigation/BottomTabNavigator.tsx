@@ -18,6 +18,7 @@ import UbeswapScreen from '../screens/UbeswapScreen'
 import PollenScreen from '../screens/PollenScreen'
 import PoofCashScreen from '../screens/PoofCashScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import WalletsScreen from '../screens/WalletsScreen'
 
 import { Image, Text } from '../components/ThemedComponents'
 
@@ -127,10 +128,17 @@ function SettingsStackNavigator() {
 	return (
 		<SettingsStack.Navigator screenOptions={screenOptions}>
 			<SettingsStack.Screen
-				name="SettingsScreen"
+				name="Settings"
 				component={SettingsScreen}
 				options={{
 					headerTitle: props => <Text style={text.h1}>Settings</Text>
+				}}
+			/>
+			<SettingsStack.Screen
+				name="WalletsScreen"
+				component={WalletsScreen}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Wallets</Text>
 				}}
 			/>
 		</SettingsStack.Navigator>

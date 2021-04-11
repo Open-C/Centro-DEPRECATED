@@ -1,19 +1,21 @@
 import * as React from 'react'
 
+import { StackScreenProps } from '@react-navigation/stack'
+import { SettingsStackParamList } from '../navigation/types'
+
 import { layout, text } from '../styles/styles'
 
-import { ScrollView, View } from 'react-native'
-import { Container, Separator, Text } from '../components/ThemedComponents'
+import { TouchableOpacity, ScrollView, View } from 'react-native'
+import { Button, Card, Spacer, Text } from '../components/ThemedComponents'
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }: StackScreenProps<SettingsStackParamList, 'SettingsScreen'>) {
 	return (
-		<ScrollView>
-			<View style={layout.column}>
-				<Container style={layout.centered}>
-					<Text style={text.h1}>Settings</Text>
-					<Separator />
-				</Container>
-			</View>
+		<ScrollView style={layout.container}>
+			<TouchableOpacity onPress={() => navigation.navigate('WalletsScreen')}>
+				<Card style={layout.row}>
+					<Text style={text.h2}>Manage Wallet</Text>
+				</Card>
+			</TouchableOpacity>
 		</ScrollView>
 	)
 }

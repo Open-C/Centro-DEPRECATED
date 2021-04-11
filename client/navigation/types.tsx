@@ -26,4 +26,5 @@ export type AppsStackParamList = {
 
 export type SettingsStackParamList = {
 	SettingsScreen: undefined
+	WalletScreen: undefined
 }
