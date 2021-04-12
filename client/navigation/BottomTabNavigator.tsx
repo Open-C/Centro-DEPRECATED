@@ -64,7 +64,7 @@ function AppsStackNavigator() {
 				name="Apps"
 				component={AppsScreen}
 				options={{
-					headerTitle: props => <Text style={text.h1}>Centro DeFi Apps</Text>
+					headerTitle: props => <Text style={text.h1}>Celo DeFi Apps</Text>
 				}}
 			/>
 			<AppsStack.Screen
