@@ -54,55 +54,57 @@ const baseAssets = sections[0].data
 
 export default function AssetsScreen() {
 	return (
-		<ScrollView style={layout.container}>
-			<View>
-				<Text style={text.h2}>Wallet</Text>
-				<Spacer />
-				<Card style={layout.centered}>
-					<WalletStatus />
-				</Card>
-			</View>
-			<SectionSpacer />
-			<FlatList
-				style={layout.cardWrapper}
-				data={sections}
-				renderItem={({ item: { title, data } }) => (
-					<View key={title}>
-						<Text style={text.h2}>{title}</Text>
-						<Spacer />
-						<Card>
-							<FlatList
-								data={data}
-								style={layout.cardList}
-								renderItem={({ item, index, separators }) => (
-									<Toggle key={item.symbol}
-										ToggleComponent={() => (
-											<View style={[layout.cardListItem, layout.row]}>
-												<Image source={item.image} style={layout.assetIcon} />
-												<Spacer />
-												<View style={[layout.column, {flex: 1}]}>
-													<Text style={text.h3}>{item.name}</Text>
-													<Text style={text.caption}>{item.symbol}</Text>
+		<ScrollView>
+			<View style={layout.container}>
+				<View>
+					<Text style={text.h2}>Wallet</Text>
+					<Spacer />
+					<Card style={layout.centered}>
+						<WalletStatus />
+					</Card>
+				</View>
+				<SectionSpacer />
+				<FlatList
+					style={layout.cardWrapper}
+					data={sections}
+					renderItem={({ item: { title, data } }) => (
+						<View key={title}>
+							<Text style={text.h2}>{title}</Text>
+							<Spacer />
+							<Card>
+								<FlatList
+									data={data}
+									style={layout.cardList}
+									renderItem={({ item, index, separators }) => (
+										<Toggle key={item.symbol}
+											ToggleComponent={() => (
+												<View style={[layout.cardListItem, layout.row]}>
+													<Image source={item.image} style={layout.assetIcon} />
+													<Spacer />
+													<View style={[layout.column, {flex: 1}]}>
+														<Text style={text.h3}>{item.name}</Text>
+														<Text style={text.caption}>{item.symbol}</Text>
+													</View>
+													<Spacer />
+													<Text style={text.strong}>0</Text>
 												</View>
-												<Spacer />
-												<Text style={text.strong}>0</Text>
-											</View>
-										)}
-										ContentComponent={() => (
-											<View style={[layout.cardListItemToggleContent, layout.row]}>
-												<Button>Deposit</Button>
-												<Button>Withdraw</Button>
-											</View>
-										)}
-									/>
-								)}
-								ItemSeparatorComponent={ListSeparator}
-							/>
-						</Card>
-					</View>
-				)}
-				ItemSeparatorComponent={SectionSpacer}
-			/>
+											)}
+											ContentComponent={() => (
+												<View style={[layout.cardListItemToggleContent, layout.row]}>
+													<Button>Deposit</Button>
+													<Button>Withdraw</Button>
+												</View>
+											)}
+										/>
+									)}
+									ItemSeparatorComponent={ListSeparator}
+								/>
+							</Card>
+						</View>
+					)}
+					ItemSeparatorComponent={SectionSpacer}
+				/>
+			</View>
 		</ScrollView>
 	)
 
