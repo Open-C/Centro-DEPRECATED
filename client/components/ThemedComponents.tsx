@@ -47,7 +47,7 @@ export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
 
 	return (
 		<View style={layout.cardWrapper}>
-			<View style={[layout.card, style, { backgroundColor, shadowColor }]} {...props} />
+			<View style={[layout.card, { backgroundColor, shadowColor }, style]} {...props} />
 		</View>
 	)
 }
@@ -57,7 +57,7 @@ export function CardSection({ style, lightColor, darkColor, ...props }: ViewProp
 
 	return (
 		<View style={layout.cardWrapper}>
-			<View style={[layout.cardSection, style, { backgroundColor }]} {...props} />
+			<View style={[layout.cardSection, { backgroundColor }, style]} {...props} />
 		</View>
 	)
 }
@@ -65,13 +65,13 @@ export function CardSection({ style, lightColor, darkColor, ...props }: ViewProp
 export function Separator({ style, lightColor, darkColor, ...props }: ViewProps) {
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'separator')
 
-	return <View style={[layout.hr, style, { backgroundColor }]} {...props} />
+	return <View style={[layout.hr, { backgroundColor }, style]} {...props} />
 }
 
 export function ListSeparator({ style, lightColor, darkColor, ...props }: ViewProps) {
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'separator')
 
-	return <View style={[layout.listSeparator, style, { backgroundColor }]} {...props} />
+	return <View style={[layout.listSeparator, { backgroundColor }, style]} {...props} />
 }
 
 export function Spacer() {
@@ -92,7 +92,7 @@ export function Button({ style, children, ...props }: TextProps & ThemeProps & T
 
 	return (
 		<TouchableOpacity style={[layout.button, { backgroundColor }]} {...props}>
-			<Text style={[style, layout.buttonText, { color: textColor }]}>{children}</Text>
+			<Text style={[layout.buttonText, { color: textColor }, style]}>{children}</Text>
 		</TouchableOpacity>
 	)
 }
@@ -103,7 +103,7 @@ export function ButtonSmall({ style, children, ...props }: TextProps & Touchable
 
 	return (
 		<TouchableOpacity style={[layout.button, layout.buttonSmall, { backgroundColor }]} {...props}>
-			<Text style={[style, layout.buttonText, layout.buttonSmallText, { color: textColor }]}>{children}</Text>
+			<Text style={[layout.buttonText, layout.buttonSmallText, { color: textColor }, style]}>{children}</Text>
 		</TouchableOpacity>
 	)
 }
@@ -114,7 +114,7 @@ export function Slider({ style, lightColor, darkColor, tintColor, thumbImage, ..
 
 	return (
 		<DefaultSlider
-			style={[style, layout.slider]}
+			style={[layout.slider, style]}
 			minimumTrackTintColor={trackTintColor}
 			maximumTrackTintColor={trackColor}
 			thumbStyle={[layout.sliderThumb, { backgroundColor: trackColor }]}
@@ -128,5 +128,5 @@ export function TextInput({ style, lightColor, darkColor, ...props }: ThemeProps
 	const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text')
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'inputBackground')
 
-	return <DefaultTextInput style={[layout.input, style, { color, backgroundColor }]} {...props} />
+	return <DefaultTextInput style={[layout.input, { color, backgroundColor }, style]} {...props} />
 }
