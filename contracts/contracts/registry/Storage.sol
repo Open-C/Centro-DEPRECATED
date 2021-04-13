@@ -4,6 +4,7 @@ import "./Types.sol";
 contract Storage is Types{
     mapping(string => address) connectors;
     mapping(address => bool) admin;
+    mapping(string => address) addressProviders;
     address centroAddr;
     bool adminSet;
 
@@ -39,6 +40,15 @@ contract Storage is Types{
 
     function getEthAddress() public pure returns (address) {
         return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    }
+
+    function newAddressProvider(string calldata _name, address _contract) isAdmin external {
+        addressProviders[_name] = _contract;
+    }
+
+    function getAddressProvider(string memory _name) public view returns (address) {
+        require(addressProviders[_name] != address(0), "Provider does not exist");
+        return addressProviders[_name];
     }
 
     function init(address[] memory _addrs) public {

@@ -25,9 +25,9 @@ async function initContract() {
   console.log(await instance.methods.getAccountIds(account.address).call());
   const walletAddr = await instance.methods.getWalletAddress(1).call();
   console.log(walletAddr);
-  //let wallet = new web3.eth.Contract(Wallet.abi, walletAddr);
+  let wallet = new web3.eth.Contract(Wallet.abi, walletAddr);
   //await deposit(wallet, walletAddr, gld, "3");
-  await depositMoola(instance, gld, 10);
+  await depositMoola(wallet, gld, "1");
 }
 
 async function addWallet(instance, name) {
@@ -43,7 +43,27 @@ async function addWallet(instance, name) {
 async function depositMoola(instance, token, amt) {
   let account = await getAccount();
   kit.connection.addAccount(account.privateKey);
-  const txObject = await instance.methods.moolaDeposit(token.address, amt, 1);
+  const amount = web3.utils.toWei(amt);
+  // console.log(
+  //   "Approve",
+  //   (
+  //     await (
+  //       await token
+  //         .approve(instance.options.address, amt)
+  //         .send({ from: account.address, gas: 2000000 })
+  //     ).receiptFuture.promise
+  //   ).transactionHash
+  // );
+  // await retry(() =>
+  //   instance.methods
+  //     .moolaDeposit(token.address, amt, 1)
+  //     .estimateGas({ from: account.address, gas: 2000000 })
+  // );
+  const txObject = await instance.methods.depositMoola(
+    account.address,
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount
+  );
   let tx = await kit.sendTransactionObject(txObject, { from: account.address });
 
   let receipt = await tx.waitReceipt();
