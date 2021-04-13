@@ -6,22 +6,34 @@ const tintColorDark = '#fff'
 
 export const themes = {
 	light: {
-		text: '#000',
+		text: 'hsla(0, 0%, 0%, 1.0)',
 		cardBackground: 'hsla(0, 0%, 100%, 1.0)',
 		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
+		cardSectionBackground: 'hsla(0, 0%, 0%, 0.04)',
 		tint: tintColorLight,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorLight,
 		separator: 'hsla(0, 0%, 0%, 0.1)',
+		sliderTrack: 'hsla(0, 0%, 0%, 0.1)',
+		sliderTrackTint: tintColorLight,
+		inputBackground: 'hsla(0, 0%, 0%, 0.04)',
+		buttonBackground: 'hsla(190, 30%, 90%, 1.0)', // 'hsla(190, 40%, 90%, 1.0)'
+		buttonText: 'hsla(0, 0%, 0%, 0.6)',
 	},
 	dark: {
-		text: '#fff',
+		text: 'hsla(0, 0%, 100%, 1.0)',
 		cardBackground: 'hsla(0, 0%, 10%, 1.0)',
 		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
+		cardSectionBackground: 'hsla(0, 0%, 100%, 0.1)',
 		tint: tintColorDark,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorDark,
 		separator: 'hsla(0, 0%, 100%, 0.1)',
+		sliderTrackTint: tintColorDark,
+		sliderTrack: 'hsla(0, 0%, 100%, 0.1)',
+		inputBackground: 'hsla(0, 0%, 100%, 0.1)',
+		buttonBackground: 'hsla(190, 30%, 20%, 1.0)',
+		buttonText: 'hsla(0, 0%, 100%, 0.9)',
 	},
 }
 
@@ -59,6 +71,12 @@ export const text = StyleSheet.create({
 	},
 	center: {
 		textAlign: 'center'
+	},
+	number: {
+		fontSize: 19,
+		lineHeight: 19 * 1.2,
+		fontWeight: 'bold',
+		// fontFamily: 'space-mono'
 	}
 })
 
@@ -66,6 +84,7 @@ export const text = StyleSheet.create({
 const containerSpacing = 28
 const containerInnerSpacing = 36
 const cardSpacing = 16
+const cardSectionSpacing = 16
 const listSpacing = 16
 const gridGap = 8
 const gridItemSize = 140
@@ -139,6 +158,10 @@ export const layout = StyleSheet.create({
 	cardList: {
 		margin: -cardSpacing,
 	},
+	cardSection: {
+		borderRadius: cardSectionSpacing,
+		padding: cardSectionSpacing
+	},
 	listItem: {
 		paddingVertical: listSpacing
 	},
@@ -152,7 +175,6 @@ export const layout = StyleSheet.create({
 	cardListItemToggleContent: {
 		padding: cardSpacing,
 		paddingTop: 0,
-		justifyContent: 'space-evenly'
 	},
 	container: {
 		padding: containerSpacing
@@ -167,7 +189,6 @@ export const layout = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 8,
-		backgroundColor: 'hsla(190, 40%, 90%, 1.0)',
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 	},
@@ -175,6 +196,31 @@ export const layout = StyleSheet.create({
 		fontWeight: '600',
 		letterSpacing: 0.5,
 		textTransform: 'uppercase',
-		opacity: 0.6
+	},
+	buttonSmall: {
+		borderRadius: 5,
+		paddingVertical: 5,
+		paddingHorizontal: 10,
+	},
+	buttonSmallText: {
+		fontSize: 11
+	},
+	spaceEvenly: {
+		justifyContent: 'space-evenly'
+	},
+	spaceBetween: {
+		justifyContent: 'space-between'
+	},
+	input: {
+		borderRadius: 5,
+		padding: 10,
+		flex: 1,
+	},
+	slider: {
+		height: 24
+	},
+	sliderThumb: {
+		width: 30,
+		height: 30
 	}
 })

@@ -40,7 +40,7 @@ export default function MoolaMarketScreen() {
 					<View key={title}>
 						<Text style={text.h2}>{title}</Text>
 						<Spacer />
-						<Card style={layout.shadowed}>
+						<Card>
 							<FlatList
 								data={data}
 								style={layout.cardList}

@@ -3,8 +3,10 @@ import * as React from 'react'
 import { layout, text, themes } from '../styles/styles'
 import useColorScheme from '../hooks/useColorScheme'
 
-import { Text as DefaultText, View, Image as DefaultImage } from 'react-native'
+import { Text as DefaultText, View, Image as DefaultImage, TextInput as DefaultTextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Slider as DefaultSlider } from 'react-native-elements'
+
 
 export function useThemeColor(
 	props: { light?: string; dark?: string },
@@ -40,19 +42,22 @@ export function Container({ style, lightColor, darkColor, ...props }: ViewProps)
 }
 
 export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
+	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground')
+	const shadowColor = useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
+
 	return (
 		<View style={layout.cardWrapper}>
-			<View
-				style={[
-					{
-						backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground'),
-						shadowColor: useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
-					},
-					layout.card,
-					style
-				]}
-				{...props}
-			/>
+			<View style={[layout.card, style, { backgroundColor, shadowColor }]} {...props} />
+		</View>
+	)
+}
+
+export function CardSection({ style, lightColor, darkColor, ...props }: ViewProps) {
+	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'cardSectionBackground')
+
+	return (
+		<View style={layout.cardWrapper}>
+			<View style={[layout.cardSection, style, { backgroundColor }]} {...props} />
 		</View>
 	)
 }
@@ -81,10 +86,47 @@ export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
 	return <DefaultImage style={[layout.img, style]} resizeMode={resizeMode} {...props} />
 }
 
-export function Button({ style, children, ...props }: TextProps & TouchableOpacity['props']){
+export function Button({ style, children, ...props }: TextProps & ThemeProps & TouchableOpacity['props']){
+	const backgroundColor = useThemeColor({}, 'buttonBackground')
+	const textColor = useThemeColor({}, 'buttonText')
+
 	return (
-		<TouchableOpacity style={[layout.button]} {...props}>
-			<Text style={[style, layout.buttonText]}>{children}</Text>
+		<TouchableOpacity style={[layout.button, { backgroundColor }]} {...props}>
+			<Text style={[style, layout.buttonText, { color: textColor }]}>{children}</Text>
 		</TouchableOpacity>
 	)
+}
+
+export function ButtonSmall({ style, children, ...props }: TextProps & TouchableOpacity['props']){
+	const backgroundColor = useThemeColor({}, 'buttonBackground')
+	const textColor = useThemeColor({}, 'buttonText')
+
+	return (
+		<TouchableOpacity style={[layout.button, layout.buttonSmall, { backgroundColor }]} {...props}>
+			<Text style={[style, layout.buttonText, layout.buttonSmallText, { color: textColor }]}>{children}</Text>
+		</TouchableOpacity>
+	)
+}
+
+export function Slider({ style, lightColor, darkColor, tintColor, thumbImage, ...props }: {tintColor: string, thumbImage: string} & ThemeProps & DefaultSlider['props']) {
+	const trackColor = useThemeColor({ light: lightColor, dark: darkColor }, 'sliderTrack')
+	const trackTintColor = useThemeColor({ light: tintColor, dark: tintColor }, 'sliderTrackTint')
+
+	return (
+		<DefaultSlider
+			style={[style, layout.slider]}
+			minimumTrackTintColor={trackTintColor}
+			maximumTrackTintColor={trackColor}
+			thumbStyle={[layout.sliderThumb, { backgroundColor: trackColor }]}
+			thumbProps={thumbImage && { children: <Image source={thumbImage} style={layout.sliderThumb} /> }}
+			{...props}
+		/>
+	)
+}
+
+export function TextInput({ style, lightColor, darkColor, ...props }: ThemeProps & DefaultTextInput['props']) {
+	const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text')
+	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'inputBackground')
+
+	return <DefaultTextInput style={[layout.input, style, { color, backgroundColor }]} {...props} />
 }
