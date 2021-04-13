@@ -30,7 +30,7 @@ const sections = [
 
 const baseAssets = sections[0].data
 
-export default function MoolaMarketScreen() {
+export function MoolaMarketScreen() {
 	return (
 		<ScrollView>
 			<FlatList

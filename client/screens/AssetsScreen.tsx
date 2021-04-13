@@ -5,10 +5,10 @@ import { layout, text } from '../styles/styles'
 
 import { FlatList, KeyboardAvoidingView, SectionList, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Button, Card, CardSection, Container, ListSeparator, Separator, SectionSpacer, Spacer, Text, Image } from '../components/ThemedComponents'
-import Toggle from '../components/Toggle'
-import WalletStatus from '../components/WalletStatus'
-import TokenDeposit from '../components/TokenDeposit'
-import TokenWithdraw from '../components/TokenWithdraw'
+import { Toggle } from '../components/Toggle'
+import { WalletStatus } from '../components/WalletStatus'
+import { TokenDeposit } from '../components/TokenDeposit'
+import { TokenWithdraw } from '../components/TokenWithdraw'
 
 const tokenBalances = {
 	'CELO': { amount: 100.00 },
@@ -64,7 +64,7 @@ const sections = [
 
 const baseAssets = sections[0].data
 
-export default function AssetsScreen() {
+export function AssetsScreen() {
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'position' : 'height'}>
 			<ScrollView>

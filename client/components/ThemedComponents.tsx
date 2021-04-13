@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { layout, text, themes } from '../styles/styles'
-import useColorScheme from '../hooks/useColorScheme'
+import { useColorScheme } from '../hooks/useColorScheme'
 
 import { Text as DefaultText, View, Image as DefaultImage, TextInput as DefaultTextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'

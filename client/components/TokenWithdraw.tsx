@@ -4,9 +4,9 @@ import { layout, text } from '../styles/styles'
 
 import { View } from 'react-native'
 import { Button, ButtonSmall, Separator, Spacer, Text, TextInput } from './ThemedComponents'
-import TokenAmountSelect from './TokenAmountSelect'
+import { TokenAmountSelect } from './TokenAmountSelect'
 
-export default function TokenWithdraw({token, maxAmount}) {
+export function TokenWithdraw({token, maxAmount}) {
 	// const [token, setToken] = React.useState(_token)
 	// const [maxAmount, setMaxAmount] = React.useState(1)
 	const [amount, setAmount] = React.useState(maxAmount)

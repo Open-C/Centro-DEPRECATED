@@ -8,7 +8,7 @@ import { layout, text } from '../styles/styles'
 import { TouchableOpacity, ScrollView, View } from 'react-native'
 import { Button, Card, Spacer, Text } from '../components/ThemedComponents'
 
-export default function SettingsScreen({ navigation }: StackScreenProps<SettingsStackParamList, 'SettingsScreen'>) {
+export function SettingsScreen({ navigation }: StackScreenProps<SettingsStackParamList, 'SettingsScreen'>) {
 	return (
 		<ScrollView style={layout.container}>
 			<TouchableOpacity onPress={() => navigation.navigate('WalletsScreen')}>

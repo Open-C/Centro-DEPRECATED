@@ -3,11 +3,11 @@ import React from 'react'
 import './global'
 
 import { Platform, UIManager } from 'react-native'
-import useCachedResources from './hooks/useCachedResources'
-import useColorScheme from './hooks/useColorScheme'
+import { useCachedResources } from './hooks/useCachedResources'
+import { useColorScheme } from './hooks/useColorScheme'
 
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import Navigation from './navigation'
+import { Navigation } from './navigation'
 import { StatusBar } from 'expo-status-bar'
 
 if (Platform.OS === 'android') {

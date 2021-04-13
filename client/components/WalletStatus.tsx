@@ -8,7 +8,7 @@ import { layout, text } from '../styles/styles'
 import { ActivityIndicator, View } from 'react-native'
 import { Button, Spacer, Text } from '../components/ThemedComponents'
 
-export default function WalletStatus() {
+export function WalletStatus() {
 	const [state, send] = useMachine(walletMachine)
 	const { address, phoneNumber, walletName, error } = state.context
 

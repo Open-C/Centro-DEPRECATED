@@ -5,7 +5,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native'
 import { text, themes } from '../styles/styles'
 import { Text, Container } from './ThemedComponents'
 
-export default function EditScreenInfo({ path }: { path: string }) {
+export function EditScreenInfo({ path }: { path: string }) {
 	return (
 		<Container>
 			<Container style={styles.getStartedContainer}>

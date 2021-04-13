@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { LayoutAnimation, TouchableOpacity, View } from 'react-native'
 
-export default function Toggle({ ToggleComponent, ContentComponent, ...props }: {
+export function Toggle({ ToggleComponent, ContentComponent, ...props }: {
 	ToggleComponent: React.ComponentType<any>,
 	ContentComponent: React.ComponentType<any>
 } & TouchableOpacity['props']){

@@ -72,7 +72,7 @@ const dapps = [{
 }*/]
 
 
-export default function AppsScreen({ navigation }: StackScreenProps<AppsStackParamList, 'AppsScreen'>) {
+export function AppsScreen({ navigation }: StackScreenProps<AppsStackParamList, 'AppsScreen'>) {
 	return (
 		<ScrollView>
 			<Container>

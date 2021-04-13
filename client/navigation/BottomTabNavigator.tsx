@@ -1,24 +1,24 @@
 import * as React from 'react'
 
 import { text, themes } from '../styles/styles'
-import useColorScheme from '../hooks/useColorScheme'
+import { useColorScheme } from '../hooks/useColorScheme'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { BottomTabParamList, AppsStackParamList, AssetsStackParamList, SettingsStackParamList } from './types'
 
 import { FontAwesome5, Ionicons } from '@expo/vector-icons'
-import AssetsScreen from '../screens/AssetsScreen'
-import AppsScreen from '../screens/AppsScreen'
-import MoolaMarketScreen from '../screens/MoolaMarketScreen'
-import MentoScreen from '../screens/MentoScreen'
-import BlockExplorerScreen from '../screens/BlockExplorerScreen'
-import CentroPayScreen from '../screens/CentroPayScreen'
-import UbeswapScreen from '../screens/UbeswapScreen'
-import PollenScreen from '../screens/PollenScreen'
-import PoofCashScreen from '../screens/PoofCashScreen'
-import SettingsScreen from '../screens/SettingsScreen'
-import WalletsScreen from '../screens/WalletsScreen'
+import { AssetsScreen } from '../screens/AssetsScreen'
+import { AppsScreen } from '../screens/AppsScreen'
+import { MoolaMarketScreen } from '../screens/MoolaMarketScreen'
+import { MentoScreen } from '../screens/MentoScreen'
+import { BlockExplorerScreen } from '../screens/BlockExplorerScreen'
+import { CentroPayScreen } from '../screens/CentroPayScreen'
+import { BlockExplorerScreen as UbeswapScreen } from '../screens/UbeswapScreen'
+import { PollenScreen } from '../screens/PollenScreen'
+import { PoofCashScreen } from '../screens/PoofCashScreen'
+import { SettingsScreen } from '../screens/SettingsScreen'
+import { WalletsScreen } from '../screens/WalletsScreen'
 
 import { Image, Text } from '../components/ThemedComponents'
 
@@ -148,7 +148,7 @@ function SettingsStackNavigator() {
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>()
 
-export default function BottomTabNavigator() {
+export function BottomTabNavigator() {
 	const colorScheme = useColorScheme()
 
 	return (

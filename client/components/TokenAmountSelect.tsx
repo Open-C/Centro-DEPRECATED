@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { Button, ButtonSmall, Slider, Spacer, Text, TextInput } from '../components/ThemedComponents'
 import { format } from 'url'
 
-export default function TokenAmountSelect({
+export function TokenAmountSelect({
 	availableTokens = undefined,
 	token, setToken,
 	maxAmount,
