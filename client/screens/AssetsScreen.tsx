@@ -11,12 +11,12 @@ import TokenDeposit from '../components/TokenDeposit'
 import TokenWithdraw from '../components/TokenWithdraw'
 
 const tokenBalances = {
-	'CELO': { amount: 10 },
-	'cUSD': { amount: 200 },
-	'cEUR': { amount: 100 },
-	'mcUSD': { amount: 140 },
-	'mcEUR': { amount: 120 },
-	'cMCO2': { amount: 1000 },
+	'CELO': { amount: 100.00 },
+	'cUSD': { amount: 222.22 },
+	'cEUR': { amount: 360.98 },
+	'mcUSD': { amount: 1000.01 },
+	'mcEUR': { amount: 123.45 },
+	'cMCO2': { amount: 50 },
 }
 
 const sections = [
