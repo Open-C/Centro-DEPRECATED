@@ -7,10 +7,10 @@ import { Button, Separator, Spacer, Text } from './ThemedComponents'
 import { TokenAmountSelect } from './TokenAmountSelect'
 import { TextInput } from 'react-native-gesture-handler'
 
-export function TokenDeposit({token}) {
+export function TokenRequest({token}) {
 	return (
 		<View>
-			<Text style={text.h3}>Deposit {token.name}</Text>
+			<Text style={text.h3}>Request {token.name}</Text>
 			<Spacer />
 			<View style={[layout.row, layout.centered]}>
 				<Button>Done</Button>

@@ -7,8 +7,8 @@ import { FlatList, KeyboardAvoidingView, SectionList, ScrollView, TouchableOpaci
 import { Button, Card, CardSection, Container, ListSeparator, Separator, SectionSpacer, Spacer, Text, Image } from '../components/ThemedComponents'
 import { Toggle } from '../components/Toggle'
 import { WalletStatus } from '../components/WalletStatus'
-import { TokenDeposit } from '../components/TokenDeposit'
-import { TokenWithdraw } from '../components/TokenWithdraw'
+import { TokenRequest } from '../components/TokenRequest'
+import { TokenSend } from '../components/TokenSend'
 
 const tokenBalances = {
 	'CELO': { amount: 100.00 },
@@ -104,7 +104,7 @@ export function AssetsScreen() {
 												)}
 												ContentComponent={() => (
 													<View style={[layout.cardListItemToggleContent]}>
-														<DepositWithdraw token={token} />
+														<RequestSend token={token} />
 													</View>
 												)}
 											/>
@@ -150,7 +150,7 @@ export function AssetsScreen() {
 	// )
 }
 
-function DepositWithdraw({token}){
+function RequestSend({token}){
 	const [mode, setMode] = React.useState('None')
 
 	React.useEffect(() => {
@@ -164,16 +164,16 @@ function DepositWithdraw({token}){
 
 	return mode === 'None' ? (
 		<View style={[layout.row, layout.spaceEvenly]}>
-			<Button onPress={() => setMode('Deposit')}>Deposit</Button>
-			<Button onPress={() => setMode('Withdraw')}>Withdraw</Button>
+			<Button onPress={() => setMode('Request')}>Request</Button>
+			<Button onPress={() => setMode('Send')}>Send</Button>
 		</View>
-	) : mode === 'Deposit' ? (
+	) : mode === 'Request' ? (
 		<CardSection>
-			<TokenDeposit token={token} />
+			<TokenRequest token={token} />
 		</CardSection>
-	) : mode === 'Withdraw' ? (
+	) : mode === 'Send' ? (
 		<CardSection>
-			<TokenWithdraw
+			<TokenSend
 				token={token}
 				maxAmount={tokenBalances[token.symbol].amount}
 			/>

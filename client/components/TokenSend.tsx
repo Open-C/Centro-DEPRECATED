@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { Button, ButtonSmall, Separator, Spacer, Text, TextInput } from './ThemedComponents'
 import { TokenAmountSelect } from './TokenAmountSelect'
 
-export function TokenWithdraw({token, maxAmount}) {
+export function TokenSend({token, maxAmount}) {
 	// const [token, setToken] = React.useState(_token)
 	// const [maxAmount, setMaxAmount] = React.useState(1)
 	const [amount, setAmount] = React.useState(maxAmount)
@@ -37,7 +37,7 @@ export function TokenWithdraw({token, maxAmount}) {
 			</View>
 			<Separator />
 			<View style={[layout.row, layout.spaceEvenly]}>
-				<Button>Withdraw</Button>
+				<Button>Send</Button>
 			</View>
 		</View>
 	)
