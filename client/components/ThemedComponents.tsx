@@ -43,7 +43,7 @@ export function Container({ style, lightColor, darkColor, ...props }: ViewProps)
 
 export function Card({ style, lightColor, darkColor, ...props }: ViewProps) {
 	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'cardBackground')
-	const shadowColor = useThemeColor({ light: lightColor, dark: darkColor }, 'cardShadow')
+	const shadowColor = useThemeColor({}, 'cardShadow')
 
 	return (
 		<View style={layout.cardWrapper}>

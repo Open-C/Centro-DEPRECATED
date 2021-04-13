@@ -79,7 +79,10 @@ export default function AppsScreen({ navigation }: StackScreenProps<AppsStackPar
 				<View style={layout.grid}>
 					{ dapps.map(({image, name, description, navigationLink, theme}) => (
 						<TouchableOpacity key={name.join('')} onPress={() => navigation.navigate(navigationLink as keyof AppsStackParamList)}>
-							<Card style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {backgroundColor: theme.backgroundColor, borderColor: theme.color, shadowColor: theme.color}]}>
+							<Card
+								lightColor={theme.backgroundColor}
+								style={[layout.gridItem, layout.centered, layout.bordered, layout.shadowed, {borderColor: theme.color, shadowColor: theme.color}]}
+							>
 								<Image source={image} style={{width: '85%', height: '52%', margin: 7}} />
 								<Text style={[{color: theme.color}, text.h3]}>
 									<Text style={[{color: theme.color}]}>{name[0]}</Text>

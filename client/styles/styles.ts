@@ -24,7 +24,7 @@ export const themes = {
 		text: 'hsla(0, 0%, 100%, 1.0)',
 		cardBackground: 'hsla(0, 0%, 10%, 1.0)',
 		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
-		cardSectionBackground: 'hsla(0, 0%, 100%, 0.1)',
+		cardSectionBackground: 'hsla(0, 0%, 0%, 0.5)',
 		tint: tintColorDark,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorDark,
@@ -83,12 +83,13 @@ export const text = StyleSheet.create({
 
 const containerSpacing = 28
 const containerInnerSpacing = 36
+const cardShadowDepth = 3
 const cardSpacing = 16
 const cardSectionSpacing = 16
 const listSpacing = 16
 const gridGap = 8
 const gridItemSize = 140
-const cardShadowDepth = 3
+const shadowDepth = 3
 
 export const layout = StyleSheet.create({
 	column: {
@@ -182,6 +183,24 @@ export const layout = StyleSheet.create({
 	bordered: {
 		borderWidth: 2,
 		borderColor: 'rgba(0, 0, 0, 0.1)'
+	},
+	shadowed: {
+		shadowOffset: {
+			width: 0,
+			height: shadowDepth
+		},
+		shadowRadius: shadowDepth,
+		shadowOpacity: 0.45,
+		elevation: shadowDepth
+	},
+	shadowedDeep: {
+		shadowOffset: {
+			width: 0,
+			height: 100
+		},
+		shadowRadius: 100,
+		shadowOpacity: 0.5,
+		elevation: 100
 	},
 	assetIcon: {
 		width: 45,
