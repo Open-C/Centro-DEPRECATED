@@ -56,6 +56,15 @@ const dapps = [{
 		color: 'hsl(0, 0%, 44%)'
 	}
 }, {
+	image: require('../assets/images/impactmarket-thumbnail.png'),
+	name: ['impact', 'market'],
+	description: 'donate directly to\nUBI beneficiaries',
+	navigationLink: 'ImpactMarketScreen',
+	theme: {
+		backgroundColor: 'hsl(222, 96%, 93%)',
+		color: 'hsl(222, 80%, 56%)'
+	}
+}, {
 	image: require('../assets/images/pollen-thumbnail.png'),
 	name: ['pollen', 'hives'],
 	description: 'save and lend with\ntrusted peers',

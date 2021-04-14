@@ -12,6 +12,7 @@ import { MentoScreen } from '../screens/MentoScreen'
 import { BlockExplorerScreen } from '../screens/BlockExplorerScreen'
 import { CentroPayScreen } from '../screens/CentroPayScreen'
 import { BlockExplorerScreen as UbeswapScreen } from '../screens/UbeswapScreen'
+import { ImpactMarketScreen } from '../screens/ImpactMarketScreen'
 import { PollenScreen } from '../screens/PollenScreen'
 import { PoofCashScreen } from '../screens/PoofCashScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'
@@ -117,6 +118,13 @@ function AppsStackNavigator() {
 				component={BlockExplorerScreen}
 				options={{
 					headerTitle: props => <Text style={text.h1}>Block Explorer</Text>
+				}}
+			/>
+			<AppsStack.Screen
+				name="ImpactMarketScreen"
+				component={ImpactMarketScreen}
+				options={{
+					headerTitle: props => <Text style={text.h1}>impactMarket</Text>
 				}}
 			/>
 			<AppsStack.Screen
