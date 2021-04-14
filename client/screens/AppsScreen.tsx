@@ -56,6 +56,15 @@ const dapps = [{
 		color: 'hsl(0, 0%, 44%)'
 	}
 }, {
+	image: require('../assets/images/carbonoffset-thumbnail.png'),
+	name: ['carbon', 'offset'],
+	description: 'go carbon negative\nfor free!',
+	navigationLink: 'CarbonOffsetScreen',
+	theme: {
+		backgroundColor: 'hsl(105, 96%, 90%)',
+		color: 'hsl(105, 67%, 45%)'
+	}
+}, {
 	image: require('../assets/images/impactmarket-thumbnail.png'),
 	name: ['impact', 'market'],
 	description: 'donate directly to\nUBI beneficiaries',

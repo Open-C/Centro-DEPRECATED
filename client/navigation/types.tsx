@@ -20,6 +20,7 @@ export type AppsStackParamList = {
 	CentroPayScreen: undefined
 	UbeswapScreen: undefined
 	BlockExplorerScreen: undefined
+	CarbonOffsetScreen: undefined
 	ImpactMarketScreen: undefined
 	PollenScreen: undefined
 	PoofCashScreen: undefined

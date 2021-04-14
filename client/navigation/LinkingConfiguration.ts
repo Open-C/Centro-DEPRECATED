@@ -19,6 +19,7 @@ export const LinkingConfiguration = {
 							CentroPayScreen: 'pay',
 							UbeswapScreen: 'ubeswap',
 							BlockExplorerScreen: 'explorer',
+							CarbonOffsetScreen: 'carbonoffset',
 							ImpactMarketScreen: 'impactmarket',
 							PollenScreen: 'pollen',
 							PoofCashScreen: 'poofcash',
