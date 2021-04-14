@@ -10,14 +10,7 @@ import { WalletStatus } from '../components/WalletStatus'
 import { TokenRequest } from '../components/TokenRequest'
 import { TokenSend } from '../components/TokenSend'
 
-const tokenBalances = {
-	'CELO': { amount: 100.00 },
-	'cUSD': { amount: 222.22 },
-	'cEUR': { amount: 360.98 },
-	'mcUSD': { amount: 1000.01 },
-	'mcEUR': { amount: 123.45 },
-	'cMCO2': { amount: 50 },
-}
+import { tokenBalances } from '../state/tokenBalances'
 
 const sections = [
 	{
