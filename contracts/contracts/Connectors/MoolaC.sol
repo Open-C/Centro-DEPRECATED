@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "../Interfaces/ILendingPool.sol";
 import "../Interfaces/ILendingPoolAddressProvider.sol";
 import "../Interfaces/IERC20Token.sol";
+import "../ContractCaller.sol";
 
 contract MoolaHelper {
     ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
@@ -12,24 +13,43 @@ contract MoolaHelper {
     }
 } 
 
-contract MoolaConnector is MoolaHelper{
+contract IStorage {
+    function getAddressProvider(string memory _name) public view returns (address);
+    function getEthAddress() public pure returns (address);
+}
+
+contract MoolaConnector is ContractCaller {
+
+    address store;
+    address owner;
+    mapping(address => uint256) private deposited;
+    address[] private token_addr;
+    mapping (address => bool) auth;
+
 
     function deposit(address _token, uint256 _amt) external payable {
-        ILendingPool moola = ILendingPool(getLendingPool());
-        IERC20Token token = IERC20Token(_token);
-        uint256 amt = _amt == uint(-1) ? token.balanceOf(address(this)) : _amt;
-        require(amt <= token.balanceOf(address(this)), "Not enough moneys.");
-        token.approve(address(moola), _amt);
-        moola.deposit(_token, _amt, 0);
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(IStorage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
+        if (_token != IStorage(store).getEthAddress()) {
+            IERC20Token token = IERC20Token(_token);
+            require(_amt <= token.balanceOf(address(this)), "Not enough moneys.");
+            token.approve(address(moola), _amt);
+            moola.deposit(_token, _amt, 0);
+
+        } else {
+            moola.deposit.value(msg.value)(_token, msg.value, 0);
+        }
     }
 
     function withdraw(address _token, uint256 _amt) external payable {
-        ILendingPool moola = ILendingPool(getLendingPool());
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(IStorage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
         moola.redeemUnderlying(_token, address(this), _amt, 0);
     }
 
     function getBalance(address[] calldata _tokens) external view returns (uint256[] memory) {
-        ILendingPool moola = ILendingPool(getLendingPool());
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(IStorage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
         uint256[] memory balances = new uint256[](_tokens.length);
         for (uint i = 0 ; i < _tokens.length; i++) {
             (uint256 currentATokenBalance,

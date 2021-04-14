@@ -11,16 +11,16 @@ import "./Types.sol";
 import "../Interfaces/IERC20Token.sol";
 import "../ContractCaller.sol";
 import "../Interfaces/ILendingPool.sol";
+import "../Interfaces/ILendingPoolAddressProvider.sol";
 
 contract CentroWallet is ContractCaller{
     //using SafeMath for uint256;
-
+    
+    address store;
     address owner;
     mapping(address => uint256) private deposited;
     address[] private token_addr;
     mapping (address => bool) auth;
-    address store;
-    bool test;
 
     constructor(address _owner, address _store) public {
         owner = _owner;
@@ -35,38 +35,51 @@ contract CentroWallet is ContractCaller{
 
     event ConnectorCalled(address _loc, bytes data);
 
-    //receive() external payable {}
+    function receive() external payable {}
 
-    function deposit(address _token, uint256 _amt) payable external //isMain {
-        {
-            IERC20Token(_token).safeTransferFrom(msg.sender, address(this), _amt);
-        //require(auth[_from], "Unauthorized deposit.");
-        // IERC20Token token = IERC20Token(_token);
-        // token.transferFrom(_from, address(this), _amt);
-        // if (deposited[_token] == 0) {
-        //     token_addr.push(_token);
-        // }
-            if (deposited[_token] == 0) {
-                token_addr.push(_token);
-            }
-            deposited[_token] += _amt;
+    function deposit(address _from, address _token, uint256 _amt) payable external isMain {
+        if (_token != Storage(store).getEthAddress()) {
+            IERC20Token token = IERC20Token(_token);
+            require(_amt <= token.balanceOf(address(this)), "Not enough moneys.");
+            token.transferFrom(_from, address(this), _amt);
+        } // else, celo was sent and is auto-deposited
+        if (deposited[_token] == 0) {
+            token_addr.push(_token);
+        }
+        deposited[_token] += _amt;
     }
 
     function withDraw(address payable _from, address _token, uint256 _amt) external isMain {
         require(auth[_from], "Unauthorized withdraw");
-        IERC20Token token = IERC20Token(_token);
-        uint256 amt = _amt == uint(0) ? token.balanceOf(address(this)) : _amt;
-        require(amt <= token.balanceOf(address(this)), "Insufficient funds");
-        token.approve(_from, amt);
-        token.transfer(_from, amt);
-        deposited[_token] -= amt;
+        if (_token != Storage(store).getEthAddress()) {
+            IERC20Token token = IERC20Token(_token);
+            uint256 amt = _amt == uint(0) ? token.balanceOf(address(this)) : _amt;
+            require(amt <= token.balanceOf(address(this)), "Insufficient funds");
+            token.approve(_from, amt);
+            token.transfer(_from, amt);
+        } else {
+            _from.transfer(_amt);
+            // (bool success, ) = _from.call.value(_amt)("");
+            // require(success, "payment failed");
+        }
+
+        deposited[_token] -= _amt;
     }
 
-    function send(address _from, address _tok, address _to, uint256 _amt) payable external isMain {
+    function send(address _from, address _tok, address payable _to, uint256 _amt) payable external isMain {
         require(auth[_from], "Unauthorized transfer.");
-        IERC20Token token = IERC20Token(_tok);
-        token.approve(_to, _amt);
-        token.transferFrom(address(this), _to, _amt);
+        if (_tok != Storage(store).getEthAddress()) {
+            IERC20Token token = IERC20Token(_tok);
+            uint256 amt = _amt == uint(0) ? token.balanceOf(address(this)) : _amt;
+            require(amt <= token.balanceOf(address(this)), "Insufficient funds");
+            token.approve(_from, amt);
+            token.transfer(_from, amt);
+        } else {
+            _to.transfer(_amt);
+            // (bool success, ) = _from.call.value(_amt)("");
+            // require(success, "payment failed");
+        }
+
         deposited[_tok] -= _amt;
     }
 
@@ -85,17 +98,35 @@ contract CentroWallet is ContractCaller{
 
     function depositMoola(address _from, address _token, uint256 _amt) external payable isMain {
         require(auth[_from], "Unauthorized query.");
-        ILendingPool moola = ILendingPool(address(0xAB9eA245B2b5F8069f6e5db8756A41D57C6D1570));
-        IERC20Token token = IERC20Token(_token);
-        uint256 amt = _amt == uint(-1) ? token.balanceOf(address(this)) : _amt;
-        require(amt <= token.balanceOf(address(this)), "Not enough moneys.");
-        token.approve(address(moola), _amt);
-        moola.deposit(_token, _amt, 0);
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
+        if (_token != Storage(store).getEthAddress()) {
+            IERC20Token token = IERC20Token(_token);
+            require(_amt <= token.balanceOf(address(this)), "Not enough moneys.");
+            token.approve(address(moola), _amt);
+            moola.deposit.value(0)(_token, _amt, 0);
+
+        } else {
+            moola.deposit.value(_amt)(_token, _amt, 0);
+        }
+    }
+
+    function withdrawMoola(address _from, address _token, uint256 _amt) external isMain {
+        require(auth[_from], "Unauthorized query.");
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
+        moola.redeemUnderlying(_token, address(this), _amt, 0);
     }
 
     function callConnector(address _from, address _target, bytes calldata _calldata) external payable returns (bytes memory){
         require(auth[_from], "Unauthorized connector call");
         emit ConnectorCalled(_target, _calldata);
         return delegate(_target, _calldata);
+    }
+
+    function contractCall(address _from, uint256 _amt, address payable _target, bytes calldata _calldata) external payable returns (bytes memory){
+        require(auth[_from], "Unauthorized connector call");
+        emit ConnectorCalled(_target, _calldata);
+        return sendCelo(_target, _amt, _calldata);
     }
 }

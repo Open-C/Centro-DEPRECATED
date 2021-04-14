@@ -3,6 +3,8 @@ pragma solidity >0.5.0;
 import "./registry/Storage.sol";
 import "./registry/Types.sol";
 import "./registry/CentroWallet.sol";
+import "./Interfaces/ILendingPool.sol";
+import "./Interfaces/ILendingPoolAddressProvider.sol";
 
 contract WalletFactory is Types {
     mapping(address => uint256[]) public addrToIds;
@@ -57,22 +59,15 @@ contract WalletFactory is Types {
 }
 
 contract CentroMain is WalletFactory{
-    bool test;
-
     constructor (address _store) public WalletFactory(){
         store = Storage(_store);
         numWallets = 0;
     }
 
-    // function getAccountIds() public view returns (uint256[] memory) {
-    //     return (retrieveIds(msg.sender));
-    // }
-
     function persistWallet(uint256 _id) public returns (string memory) {
         address w;
         string memory name;
         (name, w) = super.getWallet(_id);
-        //require (w.owner == msg.sender, "User is not authorized for the given id");
         currentWallet[msg.sender] = _id;
         return name;
     } 
@@ -102,19 +97,18 @@ contract CentroMain is WalletFactory{
         return sw.getBasis(msg.sender);
     }
 
-    function getMoolaBalance(address[] memory _toks, uint256  _wId) public returns (uint256[] memory) {
+    function getMoolaBalance(address _tok, uint256  _wId) public view
+        returns (uint256 currentATokenBalance) {
         CentroWallet sw = _getWallet(_wId);
-        bytes memory data = abi.encodeWithSignature("getBalance(address[])", _toks);
-
-        bytes memory response = sw.callConnector(msg.sender, store.getConnector("moola"), data);
-        uint256[] memory balances =  abi.decode(response, (uint256[]));
-        return balances;
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));        
+        ILendingPool moola = ILendingPool(lpa.getLendingPool());
+        (currentATokenBalance, , , , , , , , , ) = moola.getUserReserveData(_tok, address(sw));
     }
 
-    // function deposit(address _tok, uint256 _amt, uint256 _wId) external payable {
-    //     CentroWallet sw = _getWallet(_wId);
-    //     sw.deposit(msg.sender, _tok, _amt);
-    // }
+    function deposit(address _tok, uint256 _amt, uint256 _wId) external payable {
+        CentroWallet sw = _getWallet(_wId);
+        sw.deposit.value(msg.value)(msg.sender, _tok, _amt);
+    }
 
     function encodeSelector(bytes memory selector) pure private returns (bytes4) {
         return (bytes4(keccak256(selector)));
@@ -122,10 +116,7 @@ contract CentroMain is WalletFactory{
 
     function moolaDeposit(address _tok, uint256 _amt, uint256 _wId) external payable {
         CentroWallet sw = _getWallet(_wId);
-        //bytes4 selector = bytes4(keccak256("deposit(address, uint256)"));
-        bytes4 selector = encodeSelector("deposit(address, uint256)");
-        bytes memory data = abi.encodeWithSelector(selector, _tok, _amt);
-        sw.callConnector(msg.sender, store.getConnector("moola"), data);
+        sw.depositMoola(msg.sender, _tok, _amt);
     }
 
     function withdraw(address _tok, uint256 _amt, uint256 _wId) external payable {
@@ -135,9 +126,7 @@ contract CentroMain is WalletFactory{
 
     function moolaWithdraw(address _tok, uint256 _amt, uint256 _wId) public payable {
         CentroWallet sw = _getWallet(_wId);
-        //bytes memory data = abi.encodeWithSignature("withdraw(address, uint256)", _tok, _amt);
-        //sw.callConnector(msg.sender, store.getConnector("moola"), data);
-        sw.depositMoola(msg.sender, _tok, _amt);
+        sw.withdrawMoola(msg.sender, _tok, _amt);
     }
 
     function buyCelo(uint256 _amt, uint256 _maxSellAmt, uint256 _wId) external {

@@ -2,8 +2,9 @@ pragma solidity >0.5.0;
 import "./Types.sol";
 
 contract Storage is Types{
-    mapping(string => address) connectors;
+    mapping(string => address payable) connectors;
     mapping(address => bool) admin;
+    mapping(string => address) addressProviders;
     address centroAddr;
     bool adminSet;
 
@@ -28,17 +29,26 @@ contract Storage is Types{
         centroAddr = _add;
     }
 
-    function getConnector(string memory _name) public view returns (address) {
+    function getConnector(string memory _name) public view returns (address payable) {
         return connectors[_name];
     }
 
-    function addConnector(string calldata _name, address _add) external returns(bool){
+    function addConnector(string calldata _name, address payable _add) external returns(bool){
         connectors[_name] = _add;
         return true;
     }
 
     function getEthAddress() public pure returns (address) {
         return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    }
+
+    function newAddressProvider(string calldata _name, address payable _contract) isAdmin external {
+        addressProviders[_name] = _contract;
+    }
+
+    function getAddressProvider(string memory _name) public view returns (address) {
+        require(addressProviders[_name] != address(0), "Provider does not exist");
+        return addressProviders[_name];
     }
 
     function init(address[] memory _addrs) public {

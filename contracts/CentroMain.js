@@ -22,12 +22,57 @@ async function initContract() {
   );
   //await addWallet(instance, "Test1");
   //await addWallet(instance, "Test2");
+  //await addWallet(instance, "Test3");
+
   console.log(await instance.methods.getAccountIds(account.address).call());
   const walletAddr = await instance.methods.getWalletAddress(1).call();
   console.log(walletAddr);
-  //let wallet = new web3.eth.Contract(Wallet.abi, walletAddr);
-  //await deposit(wallet, walletAddr, gld, "3");
-  await depositMoola(instance, gld, 10);
+  console.log(await instance.methods.getWalletAddress(2).call());
+  let wallet = new web3.eth.Contract(Wallet.abi, walletAddr);
+  //await deposit(instance, gld, "1");
+  //await depositMoola(wallet, gld, "1");
+  //await depositMoolaCentro(instance, gld, "5");
+  //console.log(await gld.balanceOf(account.address));
+  //await withdraw(instance, "2");
+  //console.log(await gld.balanceOf(account.address));
+  //await getMoolaBalance(instance);
+  // console.log(
+  //   await instance.methods
+  //     .getMoolaBalance("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", 1)
+  //     .call()
+  // );
+  //withdrawMoola(instance, "2");
+  await send(instance, 1, 2, "2");
+}
+
+async function withdraw(instance, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt);
+  const txObject = await instance.methods.withdraw(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount,
+    1
+  );
+  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
+
+  let receipt = await tx.waitReceipt();
+  console.log(receipt);
+}
+
+async function withdrawMoola(instance, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt);
+  const txObject = await instance.methods.moolaWithdraw(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount,
+    1
+  );
+  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
+
+  let receipt = await tx.waitReceipt();
+  console.log(receipt);
 }
 
 async function addWallet(instance, name) {
@@ -43,7 +88,43 @@ async function addWallet(instance, name) {
 async function depositMoola(instance, token, amt) {
   let account = await getAccount();
   kit.connection.addAccount(account.privateKey);
-  const txObject = await instance.methods.moolaDeposit(token.address, amt, 1);
+  const amount = web3.utils.toWei(amt);
+  const txObject = await instance.methods.depositMoola(
+    account.address,
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount
+  );
+  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
+
+  let receipt = await tx.waitReceipt();
+  console.log(receipt);
+}
+
+async function depositMoolaCentro(instance, token, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt);
+  const txObject = await instance.methods.moolaDeposit(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount,
+    1
+  );
+  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
+
+  let receipt = await tx.waitReceipt();
+  console.log(receipt);
+}
+
+async function send(instance, from, to, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt);
+  const txObject = await instance.methods.send(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    to,
+    amount,
+    from
+  );
   let tx = await kit.sendTransactionObject(txObject, { from: account.address });
 
   let receipt = await tx.waitReceipt();
@@ -60,62 +141,23 @@ async function persistWallet(instance, id) {
   console.log(receipt);
 }
 
-async function deposit(instance, wallet, token, amt) {
+async function deposit(instance, token, amt) {
   let account = await getAccount();
   const amount = web3.utils.toWei(amt);
   kit.connection.addAccount(account.privateKey);
-  console.log(instance.address);
-  let tx = await token.transfer(wallet, amount).send({ from: account.address });
+  const txObject = instance.methods.deposit(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    amount,
+    1
+  );
+  let tx = await kit.sendTransactionObject(txObject, {
+    from: account.address,
+    value: amount,
+  });
+
   let receipt = await tx.waitReceipt();
-  console.log("Transaction receipt: %o", receipt);
-  //   const reserve = token.address;
-  //   const user = account.address;
-  //   const amount = web3.utils.toWei(amt);
-  //   try {
-  //     await retry(() =>
-  //       instance.methods
-  //         .deposit(reserve, amount)
-  //         .estimateGas({ from: user, gas: 2000000, value: amount })
-  //     );
-  //   } catch (err) {
-  //     console.log("Cannot deposit", err.message);
-  //     return;
-  //   }
-  //   console.log(
-  //     "Deposit",
-  //     (
-  //       await instance.methods
-  //         .deposit(reserve, amount)
-  //         .send({ from: user, gas: 2000000, value: amount })
-  //     ).transactionHash
-  //   );
+  console.log(receipt);
 }
-//   let account = await getAccount();
-//   kit.connection.addAccount(account.privateKey);
-//   //   token.increaseAllowance(instance.address, amt);
-//   //   token.approve(instance.address, amt);
-//   //   token.approve(account.address, amt);
-//   //   token.increaseAllowance(account.address, amt);
-//   try {
-//     await retry(() =>
-//       instance.methods
-//         .deposit(token.address, amt)
-//         .estimateGas({ from: account.address, value: amt })
-//     );
-//   } catch (err) {
-//     console.log("Cannot deposit", err.message);
-//     console.log(err);
-//     return;
-//   }
-//   console.log(
-//     "Deposit",
-//     (
-//       await instance.methods
-//         .deposit(token.address, amt)
-//         .send({ from: account.address, value: amt })
-//     ).transactionHash
-//   );
-//}
 
 const retry = async (fun, tries = 5) => {
   try {
