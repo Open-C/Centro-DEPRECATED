@@ -1,8 +1,5 @@
 import * as React from 'react'
 
-import { text, themes } from '../styles/styles'
-import { useColorScheme } from '../hooks/useColorScheme'
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { BottomTabParamList, AppsStackParamList, AssetsStackParamList, SettingsStackParamList } from './types'
@@ -22,17 +19,36 @@ import { WalletsScreen } from '../screens/WalletsScreen'
 
 import { Image, Text } from '../components/ThemedComponents'
 
+import { text, themes } from '../styles/styles'
+import { useColorScheme } from '../hooks/useColorScheme'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 
 // const screenOptions = {
 // 	headerStyle: {
 // 		height: 100
 // 	}
 // }
-const screenOptions = {
-	headerStyle: {
-		height: 105
-	},
-	headerStatusBarHeight: 40
+function getScreenOptions(){
+	// const colorScheme = useColorScheme()
+	// const backgroundColor = themes[colorScheme].screenBackground
+	const insets = useSafeAreaInsets()
+
+	// return {
+	// 	headerStyle: {
+	// 		height: 105,
+	// 	},
+	// 	headerStatusBarHeight: 40
+	// }
+	return {
+		headerStyle: {
+			// backgroundColor,
+			height: insets.top + 60,
+		},
+		headerStatusBarHeight: insets.top * 0.85,
+		headerTitleAlign: 'center',
+		// cardStyle: { backgroundColor }
+	}
 }
 
 
@@ -42,7 +58,7 @@ const AssetsStack = createStackNavigator<AssetsStackParamList>()
 
 function AssetsStackNavigator() {
 	return (
-		<AssetsStack.Navigator screenOptions={screenOptions}>
+		<AssetsStack.Navigator screenOptions={getScreenOptions()}>
 			<AssetsStack.Screen
 				name="AssetsScreen"
 				component={AssetsScreen}
@@ -59,7 +75,7 @@ const AppsStack = createStackNavigator<AppsStackParamList>()
 
 function AppsStackNavigator() {
 	return (
-		<AppsStack.Navigator screenOptions={screenOptions}>
+		<AppsStack.Navigator screenOptions={getScreenOptions()}>
 			<AppsStack.Screen
 				name="Apps"
 				component={AppsScreen}
@@ -126,7 +142,7 @@ const SettingsStack = createStackNavigator<SettingsStackParamList>()
 
 function SettingsStackNavigator() {
 	return (
-		<SettingsStack.Navigator screenOptions={screenOptions}>
+		<SettingsStack.Navigator screenOptions={getScreenOptions()}>
 			<SettingsStack.Screen
 				name="Settings"
 				component={SettingsScreen}
@@ -149,12 +165,22 @@ function SettingsStackNavigator() {
 const BottomTab = createBottomTabNavigator<BottomTabParamList>()
 
 export function BottomTabNavigator() {
-	const colorScheme = useColorScheme()
+	// const colorScheme = useColorScheme()
+	// const activeTintColor = themes[colorScheme].tint
+	// const backgroundColor = themes[colorScheme].menuBackground
+	const insets = useSafeAreaInsets()
+	const paddingTop = insets.bottom && 4
 
 	return (
 		<BottomTab.Navigator
 			initialRouteName="AppsTab"
-			tabBarOptions={{ activeTintColor: themes[colorScheme].tint }}>
+			tabBarOptions={{
+				// activeTintColor,
+				// inactiveBackgroundColor: 'transparent',
+				// activeBackgroundColor: backgroundColor,
+				// style: {height: 82, paddingTop: 4},
+				style: {height: insets.bottom + 50 + paddingTop, paddingTop}
+			}}>
 			<BottomTab.Screen
 				name="Assets"
 				component={AssetsStackNavigator}

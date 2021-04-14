@@ -6,6 +6,8 @@ const tintColorDark = '#fff'
 
 export const themes = {
 	light: {
+		screenBackground: 'hsla(0, 0%, 95%, 1.0)',
+		menuBackground: 'hsla(0, 0%, 100%, 1.0)',
 		text: 'hsla(0, 0%, 0%, 1.0)',
 		cardBackground: 'hsla(0, 0%, 100%, 1.0)',
 		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
@@ -17,14 +19,16 @@ export const themes = {
 		sliderTrack: 'hsla(0, 0%, 0%, 0.1)',
 		sliderTrackTint: tintColorLight,
 		inputBackground: 'hsla(0, 0%, 0%, 0.04)',
-		buttonBackground: 'hsla(190, 30%, 90%, 1.0)', // 'hsla(190, 40%, 90%, 1.0)'
+		buttonBackground: 'hsla(200, 30%, 90%, 1.0)', // 'hsla(190, 40%, 90%, 1.0)'
 		buttonText: 'hsla(0, 0%, 0%, 0.6)',
 	},
 	dark: {
-		text: 'hsla(0, 0%, 100%, 1.0)',
-		cardBackground: 'hsla(0, 0%, 10%, 1.0)',
-		cardShadow: 'hsla(0, 0%, 50%, 1.0)',
-		cardSectionBackground: 'hsla(0, 0%, 0%, 0.5)',
+		screenBackground: 'hsla(230, 28%, 14%, 1.0)', // hsla(230, 28%, 25%, 1.0)
+		menuBackground: 'hsla(230, 28%, 11%, 1.0)',
+		text: 'hsla(230, 50%, 90%, 1.0)',
+		cardBackground: 'hsla(230, 23%, 19%, 1.0)', // 'hsla(0, 0%, 10%, 1.0)'
+		cardShadow: 'hsla(0, 0%, 8%, 1.0)', // 'hsla(0, 0%, 30%, 1.0)'
+		cardSectionBackground: 'hsla(0, 0%, 0%, 0.15)', // 'hsla(0, 0%, 0%, 0.5)'
 		tint: tintColorDark,
 		tabIconDefault: '#ccc',
 		tabIconSelected: tintColorDark,
@@ -32,7 +36,7 @@ export const themes = {
 		sliderTrackTint: tintColorDark,
 		sliderTrack: 'hsla(0, 0%, 100%, 0.1)',
 		inputBackground: 'hsla(0, 0%, 100%, 0.1)',
-		buttonBackground: 'hsla(190, 30%, 20%, 1.0)',
+		buttonBackground: 'hsla(210, 20%, 28%, 1.0)', // 'hsla(210, 30%, 20%, 1.0)'
 		buttonText: 'hsla(0, 0%, 100%, 0.9)',
 	},
 }
@@ -81,7 +85,7 @@ export const text = StyleSheet.create({
 })
 
 
-const containerSpacing = 28
+const containerSpacing = 24
 const containerInnerSpacing = 36
 const cardShadowDepth = 3
 const cardSpacing = 16
