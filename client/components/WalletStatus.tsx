@@ -45,11 +45,11 @@ export function WalletStatus() {
 				</View>
 			</>
 		: state.matches('connected') ?
-			<View style={layout.row}>
+			<>
 				<Text style={text.h3}>{walletName}</Text>
 				<Text style={text.p}>Address: {address}</Text>
-				<Text style={text.p}>Phone Number: {phoneNumber}</Text>
-			</View>
+				<Text style={text.p}>Phone: {phoneNumber}</Text>
+			</>
 		: null}
 	</>
 }
