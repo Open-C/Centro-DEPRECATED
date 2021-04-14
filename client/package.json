@@ -13,6 +13,8 @@
 		"preset": "jest-expo"
 	},
 	"dependencies": {
+		"@celo/connect": "^1.1.0",
+		"@celo/contractkit": "^1.1.0",
 		"@celo/dappkit": "^1.1.0",
 		"@expo/vector-icons": "^12.0.0",
 		"@react-native-community/masked-view": "0.1.10",
