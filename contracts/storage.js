@@ -19,8 +19,9 @@ async function initContract() {
     Storage.abi,
     deployedNetwork && deployedNetwork.address
   );
-  console.log(await instance.methods.getArbo().call());
-  console.log(await instance.methods.getConnector("moola").call());
+  console.log(instance.options.address);
+  //console.log(await instance.methods.getArbo().call());
+  //console.log(await instance.methods.getConnector("moola").call());
   // let walletAdded = await instance.methods
   //   .addWallet(
   //     "0x7CF99CAE57141b05051B9dddFB7B3Dcf2Cd0ce15",
