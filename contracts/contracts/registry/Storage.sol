@@ -2,7 +2,7 @@ pragma solidity >0.5.0;
 import "./Types.sol";
 
 contract Storage is Types{
-    mapping(string => address) connectors;
+    mapping(string => address payable) connectors;
     mapping(address => bool) admin;
     mapping(string => address) addressProviders;
     address centroAddr;
@@ -29,11 +29,11 @@ contract Storage is Types{
         centroAddr = _add;
     }
 
-    function getConnector(string memory _name) public view returns (address) {
+    function getConnector(string memory _name) public view returns (address payable) {
         return connectors[_name];
     }
 
-    function addConnector(string calldata _name, address _add) external returns(bool){
+    function addConnector(string calldata _name, address payable _add) external returns(bool){
         connectors[_name] = _add;
         return true;
     }
@@ -42,7 +42,7 @@ contract Storage is Types{
         return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     }
 
-    function newAddressProvider(string calldata _name, address _contract) isAdmin external {
+    function newAddressProvider(string calldata _name, address payable _contract) isAdmin external {
         addressProviders[_name] = _contract;
     }
 

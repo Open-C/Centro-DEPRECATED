@@ -1,5 +1,5 @@
 {
-  "name": "hello_contracts_remote_node",
+  "name": "centro-contracts",
   "version": "1.0.0",
   "description": "",
   "main": "celo_deploy.js",

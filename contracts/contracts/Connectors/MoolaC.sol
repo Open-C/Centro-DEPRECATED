@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "../Interfaces/ILendingPool.sol";
 import "../Interfaces/ILendingPoolAddressProvider.sol";
 import "../Interfaces/IERC20Token.sol";
+import "../ContractCaller.sol";
 
 contract MoolaHelper {
     ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
@@ -17,7 +18,7 @@ contract IStorage {
     function getEthAddress() public pure returns (address);
 }
 
-contract MoolaConnector {
+contract MoolaConnector is ContractCaller {
 
     address store;
     address owner;
@@ -33,10 +34,10 @@ contract MoolaConnector {
             IERC20Token token = IERC20Token(_token);
             require(_amt <= token.balanceOf(address(this)), "Not enough moneys.");
             token.approve(address(moola), _amt);
-            moola.deposit.value(0)(_token, _amt, 0);
+            moola.deposit(_token, _amt, 0);
 
         } else {
-            moola.deposit.value(_amt)(_token, _amt, 0);
+            moola.deposit.value(msg.value)(_token, msg.value, 0);
         }
     }
 
