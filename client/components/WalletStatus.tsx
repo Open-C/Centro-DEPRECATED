@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import { useMachine } from '@xstate/react'
-import { walletMachine } from '../state/wallet'
+import { useWallet } from '../state/wallet'
 
 import { layout, text } from '../styles/styles'
 
@@ -9,7 +8,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { Button, Spacer, Text } from '../components/ThemedComponents'
 
 export function WalletStatus() {
-	const [state, send] = useMachine(walletMachine)
+	const [state, send] = useWallet()
 	const { address, phoneNumber, walletName, error } = state.context
 
 	return <>

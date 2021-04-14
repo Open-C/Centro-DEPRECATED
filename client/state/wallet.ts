@@ -1,18 +1,20 @@
-import { Linking } from 'expo'
 import { Machine, assign } from 'xstate'
+import { useMachine } from '@xstate/react'
+import { useBetween } from 'use-between'
 
+import * as Linking from 'expo-linking'
 import { requestTxSig, waitForSignedTxs, requestAccountAddress, waitForAccountAuth, FeeCurrency } from '@celo/dappkit'
 
 const dappName = 'Centro'
 
-const walletContext = {
+const context = {
 	address: '',
 	phoneNumber: '',
 	walletName: '',
 	error: '',
 }
 
-export const walletMachine = Machine<typeof walletContext, {
+export const walletMachine = Machine<typeof context, {
 	states: {
 		disconnected: {},
 		connecting: {},
@@ -24,7 +26,7 @@ export const walletMachine = Machine<typeof walletContext, {
 
 	initial: 'disconnected',
 
-	context: walletContext,
+	context,
 
 	states: {
 		'disconnected': {
@@ -81,3 +83,6 @@ export const walletMachine = Machine<typeof walletContext, {
 		}
 	}
 })
+
+const useWalletMachine = () => useMachine(walletMachine)
+export const useWallet = () => useBetween(useWalletMachine)
