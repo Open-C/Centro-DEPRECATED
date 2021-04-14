@@ -173,7 +173,7 @@ export function BottomTabNavigator() {
 
 	return (
 		<BottomTab.Navigator
-			initialRouteName="AppsTab"
+			initialRouteName="Apps"
 			tabBarOptions={{
 				// activeTintColor,
 				// inactiveBackgroundColor: 'transparent',
