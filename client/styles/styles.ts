@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { Spacer } from '../components/ThemedComponents'
 
 
 const tintColorLight = '#2f95dc'
@@ -214,6 +215,9 @@ export const layout = StyleSheet.create({
 		borderRadius: 8,
 		paddingVertical: 10,
 		paddingHorizontal: 20,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	buttonText: {
 		fontWeight: '600',
@@ -227,6 +231,14 @@ export const layout = StyleSheet.create({
 	},
 	buttonSmallText: {
 		fontSize: 11
+	},
+	buttonIcon: {
+		width: 18,
+		height: 18,
+		// transform: [{ translateX: -4 }],
+		// marginRight: 2
+		transform: [{ translateX: -3 }],
+		marginRight: 4
 	},
 	spaceEvenly: {
 		justifyContent: 'space-evenly'

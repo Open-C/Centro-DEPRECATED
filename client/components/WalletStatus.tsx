@@ -18,7 +18,7 @@ export function WalletStatus() {
 				<Text style={text.h3}>No wallet connected.</Text>
 				<Spacer />
 				<View style={layout.row}>
-					<Button onPress={() => send('CONNECT')}>Connect Valora</Button>
+					<Button icon={require('../assets/images/valora-logo.png')} onPress={() => send('CONNECT')}>Connect Valora</Button>
 				</View>
 			</>
 		: state.matches('connecting') ?

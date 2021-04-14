@@ -86,23 +86,25 @@ export function Image({ style, resizeMode = 'contain', ...props }: ImageProps) {
 	return <DefaultImage style={[layout.img, style]} resizeMode={resizeMode} {...props} />
 }
 
-export function Button({ style, children, ...props }: TextProps & ThemeProps & TouchableOpacity['props']){
+export function Button({ style, icon, children, ...props }: TextProps & ThemeProps & TouchableOpacity['props']){
 	const backgroundColor = useThemeColor({}, 'buttonBackground')
 	const textColor = useThemeColor({}, 'buttonText')
 
 	return (
 		<TouchableOpacity style={[layout.button, { backgroundColor }]} {...props}>
+			{icon && <Image style={layout.buttonIcon} source={icon} />}
 			<Text style={[layout.buttonText, { color: textColor }, style]}>{children}</Text>
 		</TouchableOpacity>
 	)
 }
 
-export function ButtonSmall({ style, children, ...props }: TextProps & TouchableOpacity['props']){
+export function ButtonSmall({ style, icon, children, ...props }: TextProps & TouchableOpacity['props']){
 	const backgroundColor = useThemeColor({}, 'buttonBackground')
 	const textColor = useThemeColor({}, 'buttonText')
 
 	return (
 		<TouchableOpacity style={[layout.button, layout.buttonSmall, { backgroundColor }]} {...props}>
+			{icon && <Image style={layout.buttonIcon} source={icon} />}
 			<Text style={[layout.buttonText, layout.buttonSmallText, { color: textColor }, style]}>{children}</Text>
 		</TouchableOpacity>
 	)
