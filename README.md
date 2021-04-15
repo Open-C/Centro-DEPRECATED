@@ -34,15 +34,18 @@ DappKit is a library made by Celo to help dapps interface with wallets. We used 
 ###### React Native
 The Centro front-end was made using React Native + Expo. 
 
-
+## App Mockup
+![Centro Mockup](/client/assets/images/centro-screens.png)
 
 ## Demo
+[![Centro Demo](https://img.youtube.com/vi/NO0h-fVYlV0/0.jpg)](https://www.youtube.com/watch?v=NO0h-fVYlV0)
 
 
 ## Try it Yourself!
 
 
-## Run it Locally
+## Wireframe Designs
+You can view the complete Centro design at the following [link](https://xd.adobe.com/view/cf39a43b-0baf-458c-4a89-582d1a556291-b908/) 
 
 
 ## Global Impact 
