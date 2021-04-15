@@ -38,7 +38,7 @@ The Centro front-end was made using React Native + Expo.
 ![Centro Mockup](/client/assets/images/centro-screens.png)
 
 ## Demo
-[![Centro Demo](https://img.youtube.com/vi/NO0h-fVYlV0/0.jpg)](https://www.youtube.com/watch?v=NO0h-fVYlV0)
+[![Centro Demo](https://img.youtube.com/vi/jb4QL9Mn4uo/0.jpg)](https://www.youtube.com/watch?v=jb4QL9Mn4uo)
 
 
 ## Try it Yourself!
