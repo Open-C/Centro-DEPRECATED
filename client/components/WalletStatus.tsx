@@ -17,8 +17,12 @@ export function WalletStatus() {
 			<>
 				<Text style={text.h3}>No wallet connected.</Text>
 				<Spacer />
-				<View style={layout.row}>
+				<View style={layout.centered}>
 					<Button icon={require('../assets/images/valora-logo.png')} onPress={() => send('CONNECT')}>Connect Valora</Button>
+					<Spacer />
+					<Button>Create New Wallet</Button>
+					<Spacer />
+					<Button>Import Account Key</Button>
 				</View>
 			</>
 		: state.matches('connecting') ?
@@ -46,7 +50,7 @@ export function WalletStatus() {
 			</>
 		: state.matches('connected') ?
 			<>
-				<Text style={text.h3}>Connected to {walletName}</Text>
+				<Text style={text.h3}>{walletName}</Text>
 				<Address address={address} />
 				<Text style={text.p}>Phone: {phoneNumber}</Text>
 			</>
