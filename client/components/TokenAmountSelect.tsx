@@ -7,13 +7,11 @@ import { Button, ButtonSmall, Slider, Spacer, Text, TextInput } from '../compone
 import { format } from 'url'
 
 export function TokenAmountSelect({
+	action = 'Send',
 	availableTokens = undefined,
 	token, setToken,
 	maxAmount,
 	amount, setAmount,
-}: {
-	token: {},
-
 }) {
 	const [isFocused, setIsFocused] = React.useState(false)
 	const [textInputValue, setTextInputValue] = React.useState<string>(String(amount))
@@ -32,7 +30,7 @@ export function TokenAmountSelect({
 	return (
 		<View>
 			<View style={layout.row}>
-				<Text style={[text.h3]}>Send</Text>
+				<Text style={[text.h3]}>{action}</Text>
 				<Spacer />
 				<TextInput
 					style={[text.number, text.center]}
