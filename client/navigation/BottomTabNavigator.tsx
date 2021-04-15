@@ -12,9 +12,9 @@ import { MentoScreen } from '../screens/MentoScreen'
 import { BlockExplorerScreen } from '../screens/BlockExplorerScreen'
 import { CentroPayScreen } from '../screens/CentroPayScreen'
 import { BlockExplorerScreen as UbeswapScreen } from '../screens/UbeswapScreen'
+import { PollenScreen } from '../screens/PollenScreen'
 import { CarbonOffsetScreen } from '../screens/CarbonOffsetScreen'
 import { ImpactMarketScreen } from '../screens/ImpactMarketScreen'
-import { PollenScreen } from '../screens/PollenScreen'
 import { PoofCashScreen } from '../screens/PoofCashScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'
 import { WalletsScreen } from '../screens/WalletsScreen'
@@ -122,6 +122,13 @@ function AppsStackNavigator() {
 				}}
 			/>
 			<AppsStack.Screen
+				name="PollenScreen"
+				component={PollenScreen}
+				options={{
+					headerTitle: props => <Text style={text.h1}>Pollen</Text>
+				}}
+			/>
+			<AppsStack.Screen
 				name="CarbonOffsetScreen"
 				component={CarbonOffsetScreen}
 				options={{
@@ -133,13 +140,6 @@ function AppsStackNavigator() {
 				component={ImpactMarketScreen}
 				options={{
 					headerTitle: props => <Text style={text.h1}>impactMarket</Text>
-				}}
-			/>
-			<AppsStack.Screen
-				name="PollenScreen"
-				component={PollenScreen}
-				options={{
-					headerTitle: props => <Text style={text.h1}>Pollen</Text>
 				}}
 			/>
 			<AppsStack.Screen
