@@ -78,8 +78,15 @@ export const walletMachine = Machine<typeof context, {
 				callback: Linking.makeUrl('/settings/wallets')
 			})
 
-			const { address, phoneNumber } = await waitForAccountAuth(requestId)
-			return { address, phoneNumber }
+			// const { address, phoneNumber } = await waitForAccountAuth(requestId)
+			// return { address, phoneNumber }
+
+			waitForAccountAuth(requestId)
+			await new Promise(r => setTimeout(r, 2000))
+			return {
+				address: '0x1234567890123456789012345678901234567890',
+				phoneNumber: '+1 555-555-5555'
+			}
 		}
 	}
 })
