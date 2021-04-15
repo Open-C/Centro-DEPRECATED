@@ -29,7 +29,7 @@ getWalletBallance(uint256 wId)
    * Returns an array of token addresses, and balances of the corresponding token
    * To use a persisted wallet, use wId = 0
    * Return type:
-   * {
+      * {
 Tokens : [0x988321, 0x…..]
 Balances: [10, 2]
 }
