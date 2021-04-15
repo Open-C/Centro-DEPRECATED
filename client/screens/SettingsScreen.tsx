@@ -65,6 +65,14 @@ export function SettingsScreen({ navigation }: StackScreenProps<SettingsStackPar
 					<Caret />
 				</Card>
 			</TouchableOpacity>
+			<Spacer />
+			<TouchableOpacity onPress={() => {}}>
+				<Card style={[layout.row, layout.spaceBetween]}>
+					<Text style={text.h3}>Lock App</Text>
+					<Spacer />
+					<Caret />
+				</Card>
+			</TouchableOpacity>
 		</ScrollView>
 	)
 }
