@@ -37,15 +37,11 @@ The Centro front-end was made using React Native + Expo.
 ## App Mockup
 ![Centro Mockup](/client/assets/images/centro-screens.png)
 
-## Demo
-[![Centro Demo](https://img.youtube.com/vi/jb4QL9Mn4uo/0.jpg)](https://www.youtube.com/watch?v=jb4QL9Mn4uo)
-
-
-## Try it Yourself!
-
-
 ## Wireframe Designs
-You can view the complete Centro design at the following [link](https://xd.adobe.com/view/cf39a43b-0baf-458c-4a89-582d1a556291-b908/) 
+You can view the complete Centro design at the following [link](https://xd.adobe.com/view/cf39a43b-0baf-458c-4a89-582d1a556291-b908/). The React Native app is currently being locally hosted.
+
+## Demo
+[![Centro Demo](https://img.youtube.com/vi/9W-n-QCIVQg/0.jpg)](https://www.youtube.com/watch?v=9W-n-QCIVQg) 
 
 
 ## Global Impact 
