@@ -31,8 +31,7 @@ export function SettingsScreen({ navigation }: StackScreenProps<SettingsStackPar
 					<View>
 						<Text style={text.h2}>Manage Wallet</Text>
 						{address ? <>
-							<Spacer />
-							<Address address={address} />
+							<Address address={address} truncated={true} />
 						</> : null}
 					</View>
 					<View style={layout.row}>
