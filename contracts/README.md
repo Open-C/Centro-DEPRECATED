@@ -1,9 +1,4 @@
-Contract: Storage
-Address: "0x2c5bCde385703754D91a2645767ef0803C21c6A5"
-
--------------------------------------------------------------------
-getArbo() public view returns (address)
-returns address of forward-facing contract CentroMain
+Storage address: "0x2c5bCde385703754D91a2645767ef0803C21c6A5"
 
 CentroMain - Forward-facing Contract
 ----------------------------------------------------------------------
@@ -68,7 +63,7 @@ buyCelo(uint256 amt, uint256 maxSellAmount, uint256 wId)
 sellCelo(uint256 amt, uint256 minBuyAmount, uint256 wId)
       * Places a limit order to sell amt of celo for a minimum amount of cUSD in exchange
       * wId = 0 to use persisted wallet
-
+      
 ---------------------------------------------------------------------------
 send(address token, uint256 receiver, uint256 amt, uint256 wId)
       * Transfers amt of token to the smart wallet corresponding to receiver.
