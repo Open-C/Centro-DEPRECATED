@@ -5,12 +5,19 @@ import { useWallet } from '../state/wallet'
 import { layout, text } from '../styles/styles'
 
 import { ActivityIndicator, View } from 'react-native'
-import { Button, Spacer, Text } from '../components/ThemedComponents'
+import { Button, Image, Spacer, Text } from '../components/ThemedComponents'
 import { Address } from '../components/Address'
+
+const wallets = [{
+	name: 'Valora',
+	icon: require('../assets/images/valora-logo.png')
+}]
 
 export function WalletStatus() {
 	const [state, send] = useWallet()
 	const { address, phoneNumber, walletName, error } = state.context
+
+	const wallet = wallets[walletName]
 
 	return <>
 		{state.matches('disconnected') ?
@@ -18,7 +25,9 @@ export function WalletStatus() {
 				<Text style={text.h3}>No wallet connected.</Text>
 				<Spacer />
 				<View style={layout.centered}>
-					<Button icon={require('../assets/images/valora-logo.png')} onPress={() => send('CONNECT')}>Connect Valora</Button>
+					{wallets.map(({name, icon}) => (
+						<Button icon={name} onPress={() => send('CONNECT', {wallet: name})}>Connect {name}</Button>
+					))}
 					<Spacer />
 					<Button>Create New Wallet</Button>
 					<Spacer />
@@ -50,7 +59,11 @@ export function WalletStatus() {
 			</>
 		: state.matches('connected') ?
 			<>
-				<Text style={text.h3}>{walletName}</Text>
+				<View style={layout.row}>
+					<Image source={wallet.icon} width={30} height={30} />
+					<Spacer />
+					<Text style={text.h2}>{walletName}</Text>
+				</View>
 				<Address address={address} />
 				<Text style={text.p}>Phone: {phoneNumber}</Text>
 			</>
