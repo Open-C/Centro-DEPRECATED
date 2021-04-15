@@ -51,11 +51,11 @@ Furthermore, we are developing custom smart contracts for impact-specific use ca
 
 
 ## What's Next?
-* Finish full-integrations of Moola, Ubeswap, Mento, and Payments
-* Start react native for savings circles / village banking, impactMarket, and carbon offsetting
+* Finish full integrations of Moola, Ubeswap, Mento, and Payments
+* Implement savings circles / village banking, impactMarket, and carbon offsetting
 * Add beneficiary functionality 
 * Run live tests with the MTN MoMo API and integrate it
-* Integrate analytics with The Graph
+* Create a subgraph on The Graph for integrated analytics
 
 
 ## Who We Are
