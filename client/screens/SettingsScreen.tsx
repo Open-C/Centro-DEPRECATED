@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { useWallet } from '../state/wallet'
+
 import { StackScreenProps } from '@react-navigation/stack'
 import { SettingsStackParamList } from '../navigation/types'
 
@@ -8,6 +10,7 @@ import { layout, text } from '../styles/styles'
 import { Switch, TouchableOpacity, ScrollView, View } from 'react-native'
 import { Button, Card, Image, Spacer, Text } from '../components/ThemedComponents'
 import { FontAwesome5 } from '@expo/vector-icons'
+import { Address } from '../components/Address'
 
 function Caret(){
 	return (
@@ -18,11 +21,20 @@ function Caret(){
 }
 
 export function SettingsScreen({ navigation }: StackScreenProps<SettingsStackParamList, 'SettingsScreen'>) {
+	const [state, send] = useWallet()
+	const { address, phoneNumber, walletName, error } = state.context
+
 	return (
 		<ScrollView style={layout.container}>
 			<TouchableOpacity onPress={() => navigation.navigate('WalletsScreen')}>
 				<Card style={[layout.row, layout.spaceBetween]}>
-					<Text style={text.h2}>Manage Wallet</Text>
+					<View>
+						<Text style={text.h2}>Manage Wallet</Text>
+						{address ? <>
+							<Spacer />
+							<Address address={address} />
+						</> : null}
+					</View>
 					<View style={layout.row}>
 						<Image source={require('../assets/images/accountkey-icon.png')} style={{width: 60, height: 60}} />
 						<Spacer />

@@ -6,6 +6,7 @@ import { layout, text } from '../styles/styles'
 
 import { ActivityIndicator, View } from 'react-native'
 import { Button, Spacer, Text } from '../components/ThemedComponents'
+import { Address } from '../components/Address'
 
 export function WalletStatus() {
 	const [state, send] = useWallet()
@@ -46,7 +47,7 @@ export function WalletStatus() {
 		: state.matches('connected') ?
 			<>
 				<Text style={text.h3}>Connected to {walletName}</Text>
-				<Text style={text.p}>Address: {address}</Text>
+				<Address address={address} />
 				<Text style={text.p}>Phone: {phoneNumber}</Text>
 			</>
 		: null}

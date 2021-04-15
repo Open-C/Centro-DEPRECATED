@@ -82,7 +82,12 @@ export const text = StyleSheet.create({
 		lineHeight: 19 * 1.2,
 		fontWeight: 'bold',
 		// fontFamily: 'space-mono'
-	}
+	},
+	address: {
+		fontFamily: 'space-mono',
+		fontSize: 12,
+		lineHeight: 12 * 2
+	},
 })
 
 
