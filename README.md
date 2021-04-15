@@ -5,7 +5,6 @@ Centro is an Android, iOS, and web app that allows Celo users to easily access D
 Centro empowers users to safely and efficiently manage their assets across the Celo ecosystem while maintaining self-custody. Centro has free cash-in, cash-out, and trading, but we take a small percentage of interest earned on Moola deposits to fund new integrations.
 
 
-
 ## Integrations
 * Valora - connect Centro to your Valora wallet
 * Moola Market - UI design, connectors, and front-end (deposit)
@@ -18,9 +17,8 @@ Centro empowers users to safely and efficiently manage their assets across the C
 * Mobile Money Cashout - developer account setup; sandbox testing complete
 
 
-
 ## Technical Overview 
-The Centro app is comprised of four main components: a wallet wrapper, protocol connectors, Celo DappKit, and the react native front-end. 
+The Centro app is comprised of four main components: a wallet wrapper, protocol connectors, Celo DappKit, and the React Native front-end. 
 
 ###### Wallet Wrapper
 The wallet wrapper is a smart contract that manages user funds and is only accessible by who created the individual wallet. Using this wrapper, we are able to expand the functionality of a traditional Celo wallet by enabling beneficiary addresses and autonomous transactions. 
@@ -34,12 +32,15 @@ DappKit is a library made by Celo to help dapps interface with wallets. We used 
 ###### React Native
 The Centro front-end was made using React Native + Expo. 
 
+
 ## Demo
 [![Centro Demo](https://img.youtube.com/vi/9W-n-QCIVQg/0.jpg)](https://www.youtube.com/watch?v=9W-n-QCIVQg) 
 
+
 ## App Mockup
 ![Centro Mockup](/client/assets/images/centro-screens.png)
-You can view the complete Centro design at the following [link](https://xd.adobe.com/view/cf39a43b-0baf-458c-4a89-582d1a556291-b908/). The React Native app is currently being locally hosted.
+You can view the complete Centro design at the following [link](https://xd.adobe.com/view/cf39a43b-0baf-458c-4a89-582d1a556291-b908/).
+
 
 ## Global Impact 
 We are extremely excited about Centro's potential for impact, particularly when it comes to the flow of compounded interest. Using our wallet wrapper and impactMarket APIs, we are able to syphon a percentage of interest earned on Moola deposits to UBI beneficiaries around the world! Similarly, users can redirect interest earned to carbon offsetting initiatives, such Project Wren or MOSS Carbon Credits. 
@@ -47,6 +48,7 @@ We are extremely excited about Centro's potential for impact, particularly when 
 An additional area for impact is where we focus our attention for cash-in/cash-out. While most projects attempt to integrate USD on-/off-ramps, we have focused our attention on mobile-money, the financial fabric of Africa. Specifically, we are integrating the MTN MoMo API, one of the largest mobile money providers in all of Africa. By doing so, we will empower anyone with a smartphone to access Celo services, even if they do not have a bank account. 
 
 Furthermore, we are developing custom smart contracts for impact-specific use cases, such as savings circles and village banking. By providing their traditional financial systems on Centro, we not only emulate but improve their activity by making it safer, more efficient, transparent, global, and near-free. We have already created a UI design for a full-fledged village banking system, and have written the smart contracts for savings circles. What makes this application unique is that circle funds are automatically deposited to Moola market so groups can earn interest on stable-value assets. They can either put this interest in a vault, lottery it off, or distribute it back to the members. We are working to finish the react native front-end ASAP.
+
 
 ## What's Next?
 * Finish full-integrations of Moola, Ubeswap, Mento, and Payments
@@ -57,13 +59,12 @@ Furthermore, we are developing custom smart contracts for impact-specific use ca
 
 
 ## Who We Are
-Darryl, Dylan, and Eric--the creators of Centro--are all students at Cal Poly San Luis Obispo. We met through Blockchain at Cal Poly (student club) and SLOHacks (hackathon), where we developed a shared passion for decentralized finance. Our past blockchain projects range from savings circles to streamable payments, and we also made [CeloHub](https://celohub.org)--a dapp gallery for the Celo blockchain. Our team has a diverse skillset, and together we form OpenC. Darryl led front-end development with React Native, Dylan led backend architecture + smart contracts with Solidity, and Eric led product. 
+We are Darryl, Dylan, and Eric, students at Cal Poly San Luis Obispo. We met through Blockchain at Cal Poly (student club) and SLO Hacks (hackathon), where we developed a shared passion for decentralized finance. Our past blockchain projects range from savings circles to streamable payments, and we also made [CeloHub](https://celohub.org), a dapp gallery for the Celo blockchain. Our team has a diverse skillset, and together we form OpenC. Darryl led front-end development with React Native, Dylan led backend architecture + smart contracts with Solidity, and Eric led product.
 
 
 ## Our Make it Mobile Experience
-Centro is part of the Celo Make it Mobile Hackathon with GitCoin. 
--Darryl learned how to use React Native ;p
--Dylan learned how to deploy contracts to Celo
--Eric learned how to limit project scope lol
+Centro was created during the Celo Make it Mobile Hackathon with Gitcoin.
 
-
+* Darryl learned how to use React/React Native ;p
+* Dylan learned how to deploy smart contracts to Celo
+* Eric learned how to limit project scope lol
