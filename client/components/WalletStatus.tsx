@@ -45,7 +45,7 @@ export function WalletStatus() {
 			</>
 		: state.matches('connected') ?
 			<>
-				<Text style={text.h3}>{walletName}</Text>
+				<Text style={text.h3}>Connected to {walletName}</Text>
 				<Text style={text.p}>Address: {address}</Text>
 				<Text style={text.p}>Phone: {phoneNumber}</Text>
 			</>
