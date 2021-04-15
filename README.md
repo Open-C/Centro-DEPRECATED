@@ -10,7 +10,7 @@ Centro empowers users to safely and efficiently manage their assets across the C
 * Valora - connect Centro to your Valora wallet
 * Moola Market - UI design, connectors, and front-end (deposit)
 * Celo Mento - UI design, connectors
-* Ubeswap - UI design, connectors
+* Ubeswap - UI design
 * Payments - UI design, connectors
 * Block Explorer - fully integrated via in-app browser
 * Savings Circles - UI design and smart contracts (funds are automatically invested in Moola and earn interest!)
