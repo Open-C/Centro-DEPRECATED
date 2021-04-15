@@ -9,7 +9,7 @@ import { WalletStatus } from '../components/WalletStatus'
 export function WalletsScreen() {
 	return (
 		<ScrollView style={layout.container}>
-			<Card>
+			<Card style={layout.centered}>
 				<WalletStatus />
 			</Card>
 		</ScrollView>
