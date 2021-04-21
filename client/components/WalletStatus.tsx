@@ -17,7 +17,7 @@ export function WalletStatus() {
 	const [state, send] = useWallet()
 	const { address, phoneNumber, walletName, error } = state.context
 
-	const wallet = wallets[walletName]
+	const wallet = wallets.find(wallet => wallet.name === walletName)
 
 	return <>
 		{state.matches('disconnected') ?
@@ -26,7 +26,7 @@ export function WalletStatus() {
 				<Spacer />
 				<View style={layout.centered}>
 					{wallets.map(({name, icon}) => (
-						<Button icon={name} onPress={() => send('CONNECT', {wallet: name})}>Connect {name}</Button>
+						<Button icon={icon} onPress={() => send('CONNECT', {wallet: name})}>Connect {name}</Button>
 					))}
 					<Spacer />
 					<Button>Create New Wallet</Button>
