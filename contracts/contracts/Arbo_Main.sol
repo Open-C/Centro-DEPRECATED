@@ -144,7 +144,7 @@ contract CentroMain is WalletFactory{
     function send(address _tok, uint256 _receiver, uint256 _amt, uint256 _wId) payable external {
         CentroWallet from = _getWallet(_wId);
         CentroWallet to = _getWallet(_receiver);
-        from.send(msg.sender, _tok, address(to), _amt);
+        from.send(msg.sender, _tok, address(uint160(address(to))), _amt);
         to.incrementBasis(_tok, _amt);
     }
 
