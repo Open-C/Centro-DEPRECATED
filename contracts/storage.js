@@ -20,7 +20,7 @@ async function initContract() {
     deployedNetwork && deployedNetwork.address
   );
   console.log(instance.options.address);
-  //console.log(await instance.methods.getArbo().call());
+  //console.log(await instance.methods.getCentro().call());
   //console.log(await instance.methods.getConnector("moola").call());
   // let walletAdded = await instance.methods
   //   .addWallet(

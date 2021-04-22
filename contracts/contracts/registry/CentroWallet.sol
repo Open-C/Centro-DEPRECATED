@@ -29,7 +29,7 @@ contract CentroWallet is ContractCaller{
 	}
 
 	modifier isMain() {
-		require(msg.sender == Storage(store).getArbo() || msg.sender == owner, "Unauthorized access");
+		require(msg.sender == Storage(store).getCentro() || msg.sender == owner, "Unauthorized access");
 		_;
 	}
 

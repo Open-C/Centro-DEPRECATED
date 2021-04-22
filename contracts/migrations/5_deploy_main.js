@@ -9,7 +9,7 @@ module.exports = function (deployer, network, accounts) {
 		const store = await Storage.deployed();
 		store.init(["0xe3764321f5E5b236B9899778DbFbf0bA039af9c7", ...accounts]);
 		const centro = await deployer.deploy(Centro, store.address);
-		store.setArboAddr(centro.address);
+		store.setCentroAddr(centro.address);
 		store.newAddressProvider(
 			"moola",
 			"0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483"

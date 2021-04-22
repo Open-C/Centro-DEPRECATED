@@ -21,11 +21,11 @@ contract Storage is Types{
 		admin[_add] = true;
 	}
 
-	function getArbo() public view returns (address) {
+	function getCentro() public view returns (address) {
 		return centroAddr;
 	}
 
-	function setArboAddr(address _add) external isAdmin {
+	function setCentroAddr(address _add) external isAdmin {
 		centroAddr = _add;
 	}
 
