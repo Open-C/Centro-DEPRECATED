@@ -1,6 +1,16 @@
-Storage address: "0x2c5bCde385703754D91a2645767ef0803C21c6A5"
+## Deployed Contracts
 
-CentroMain - Forward-facing Contract
+### Alfajores
+
+- Migrations: `0x3c4Dc782702f7a672b3FeAdE1f0093603F0605aA`
+- Storage: `0x3c4Dc782702f7a672b3FeAdE1f0093603F0605aA`
+- CentroMain: `0xBf667831a019151192a93d8FF07f64Ff8d4f799F`
+- MoolaConnector: `0xfd2e55632e53472F2CEDd2Da7eE7a02209367394`
+- ExchangeConnector: `0xf0C7e841f6F77EC6DC8DB51770D7510cFAd17cE9`
+- CentroWallet: `0x043715CB875Ef7db8A1681cb223571f997a362ee`
+
+
+## CentroMain - Forward-facing Contract
 ----------------------------------------------------------------------
 `newWallet(String name)`
 * Creates a wallet for the user initiating the call
