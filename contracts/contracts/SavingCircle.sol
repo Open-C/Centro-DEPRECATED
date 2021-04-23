@@ -6,8 +6,8 @@ pragma solidity >=0.4.7;
 //import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 //import "./utils/IERC20Token.sol";
 
-abstract contract ILendingPoolAddressesProvider {
-    function getLendingPool() public view virtual returns (address);
+contract ILendingPoolAddressesProvider {
+    function getLendingPool() public view returns (address);
 }
 
 interface LendingPool {
@@ -93,9 +93,8 @@ contract SavingCircle {
         _;
     }
     
-    receive() external payable {}
-    
-    function pay() public payable {}
+   
+    function receive() public payable {}
 
     function startNewCycle(bytes32 circle) public newCycle(circle) {
         Circle storage circ = circles[circle];
@@ -190,7 +189,7 @@ contract SavingCircle {
         circle.memberInfo[msg.sender].amtContributed += value;
         totalBasis[token] += value;
     }
-    function request(bytes32 circleID, address token, uint256 value) circleExists(circleID) isMember(circleID) external {
+    function request(bytes32 circleID, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         Request memory newRequest;
         newRequest.amount = value;
@@ -241,6 +240,6 @@ contract SavingCircle {
     function withdrawMoola(bytes32 circleID, uint256 amt) private {
         Circle storage circle = circles[circleID];
         LendingPool moola = getLendingPool();
-        moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
+        moola.redeemUnderlying(circle.tokenAddress, address(uint160(address(this))), amt, 0);
     }
 }
