@@ -1,13 +1,13 @@
 pragma solidity >=0.4.7;
 
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "./utils/IERC20Token.sol";
+//import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+//import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+//import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+//import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+//import "./utils/IERC20Token.sol";
 
-contract ILendingPoolAddressesProvider {
-    function getLendingPool() public view returns (address);
+abstract contract ILendingPoolAddressesProvider {
+    function getLendingPool() public view virtual returns (address);
 }
 
 interface LendingPool {
@@ -25,10 +25,10 @@ interface LendingPool {
             uint256 variableBorrowIndex,
             uint256 lastUpdateTimestamp,
             bool usageAsCollateralEnabled
-        )
+        );
 }
 
-contract Circle is ReentrancyGuard, Ownable, Initializable {
+contract SavingCircle {
 
     ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
 
@@ -41,7 +41,7 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
     struct User {
         uint256 balance;
         uint256 missedPayments;
-        bool hasContributed;
+        uint256 amtContributed;
         bool isAlive;
     }
 
@@ -66,7 +66,7 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         Request[] requests;
     }
     mapping(bytes32 => Circle) circles;
-    mapping(address => bytes[]) memberships;
+    mapping(address => bytes32[]) memberships;
     mapping(address => uint256) totalBasis;
 
     event ContributionMade(address user, bytes32 circle, uint256 amount);
@@ -78,7 +78,7 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         _;
     }
 
-    modifier circleExists(address circle) {
+    modifier circleExists(bytes32 circle) {
         require(circles[circle].members.length > 0);
         _;
     }
@@ -88,38 +88,43 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         _;
     }
 
-    modifier newCycle(bytes circleID) {
-        require(circles[circleID].circleEnd < block.timestamp, "There is still time left!");
+    modifier newCycle(bytes32 circleID) {
+        require(circles[circleID].cycleEnd < block.timestamp, "There is still time left!");
         _;
     }
+    
+    receive() external payable {}
+    
+    function pay() public payable {}
 
-    function initialize() external initializer {
-        _transferOwnership(msg.sender);
-    }
-
-    function updateMissedPayments(bytes32 circle) public newCycle(circle) {
+    function startNewCycle(bytes32 circle) public newCycle(circle) {
         Circle storage circ = circles[circle];
         circ.numCycles++;
-        circ.cycleEnd = block.timestamp.add(circ.cycleLength.mul(1 days));
+        circ.cycleEnd = block.timestamp + (circ.cycleLength * (1 days));
         for (uint i = 0; i < circ.members.length; i++) {
-            if (! circ.memberInfo[circ.members[i]].hasContributed) {
-                circ.memberInfo[circ.members[i]].missedPayments++;
+            uint amtContributed = circ.memberInfo[circ.members[i]].amtContributed;
+            if (amtContributed < circ.depositRequirement) {
+                circ.memberInfo[circ.members[i]].missedPayments += circ.depositRequirement - amtContributed;
+                circ.memberInfo[circ.members[i]].amtContributed = 0;
+            } else {
+                circ.memberInfo[circ.members[i]].amtContributed = amtContributed - circ.depositRequirement;
             }
-            circ.memberInfo[circ.members[i]].hasContributed = false;
+            
         }
     }
 
-    function queryMissedPayments() public view returns (address[] memory _addresses, uint[] memory _missedPayments) {
-        uint[] memory missed = new uint[members.length];
-        for (uint i = 0; i < members.length; i++) {
-            missed[i] = memberInfo[members[i]].missedPayments;
+    function queryMissedPayments(bytes32 circleID) public view isMember(circleID) returns (address[] memory _addresses, uint[] memory _missedPayments) {
+        mapping(address => User) storage memberInfo = circles[circleID].memberInfo;
+        _addresses = circles[circleID].members;
+        uint[] memory missed = new uint[](_addresses.length);
+        for (uint i = 0; i < _addresses.length; i++) {
+            missed[i] = memberInfo[_addresses[i]].missedPayments;
         }
-        _missedPayments = missedPayments;
-        _addresses = members;
+        _missedPayments = missed;
     }
 
     function getLendingPool() private view returns (LendingPool) {
-        return lpa.getLendingPool();
+        return LendingPool(lpa.getLendingPool());
     }
 
     function getMembers(bytes32 circle) public view returns (address[] memory) {
@@ -130,57 +135,62 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         return memberships[user];
     }
 
-    function getCircleInfo(bytes32 circle) public view returns (address[] memory, address, uint256, uint256, GovernanceType) {
+    function getCircleInfo(bytes32 circle) public view isMember(circle) returns (address[] memory, address, uint256, uint256, GovernanceType) {
         Circle storage circ = circles[circle];
-        return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.timestamp, circ.govType);
+        return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.cycleLength, circ.govType);
     }
 
-    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType) external {
+    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleLength, bool autoStart) external {
         bytes32 name = keccak256(abi.encodePacked(uuid));
         Circle storage circle = circles[name];
 
         circle.owner = msg.sender;
         circle.members = members;
-        circle.tokenAddress = tokenAddress;
+        circle.tokenAddress = tokenAddr;
         circle.depositRequirement = depositAmount;
-        circle.timestamp = now;
         circle.govType = govType;
+        circle.cycleLength = cycleLength;
+        
+        if (autoStart) {
+            circle.cycleEnd = block.timestamp + (cycleLength * (1 days));
+        }
 
         for (uint256 i = 0; i < members.length; i++) {
             memberships[members[i]].push(name);
         }
     }
 
-    function getBalances(bytes32 circleID) public view circleExists returns (address[] memory, uint256[]) {
+    function getBalances(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (address[] memory, uint256[] memory) {
         Circle storage circle = circles[circleID];
         uint256[] memory balances = new uint256[](circle.members.length);
 
         for (uint256 i = 0; i < balances.length; i++) {
             balances[i] = circle.memberInfo[circle.members[i]].balance; 
         }
-        return balances;
+        return (circle.members, balances);
     }
 
-    function getTotalBalance(bytes32 memory circleID) public view circleExists returns (uint256, uint256) {
+    function getTotalBalance(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (uint256, uint256) {
         LendingPool moola = getLendingPool();
         Circle storage circle = circles[circleID];
-        (uint256 _moola, , , , , , , , , ) = moola.getUserReserveData(circle.tokenAddr, address(this));
-        _moola = _moola * circle.total / totalBasis[circle.tokenAddr];
+        (uint256 _moola, , , , , , , , , ) = moola.getUserReserveData(circle.tokenAddress, address(this));
+        _moola = _moola * circle.total / totalBasis[circle.tokenAddress];
         return (_moola, circle.total);
     }
 
-    function deposit(bytes32 circleID, address token, uint256 value) isMember(circleID) payable external {
+    function deposit(bytes32 circleID, address token, uint256 value) circleExists(circleID) isMember(circleID) payable external {
         Circle storage circle = circles[circleID];
         LendingPool moola = getLendingPool();
         require(token == circle.tokenAddress, "Incorrect token!");
-        ERC20(token).safeTransferFrom(msg.sender, address(this), value);
-        ERC20(token).approve(address(moola), value);
+        //ERC20(token).safeTransferFrom(msg.sender, address(this), value);
+        //ERC20(token).approve(address(moola), value);
         moola.deposit(token, value, 0);
         circle.total += value;
         circle.memberInfo[msg.sender].balance += value;
+        circle.memberInfo[msg.sender].amtContributed += value;
         totalBasis[token] += value;
     }
-    function request(bytes32 circleID, address token, uint256 value) isMember(circleID) external {
+    function request(bytes32 circleID, address token, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         Request memory newRequest;
         newRequest.amount = value;
@@ -189,10 +199,10 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         circle.requests.push(newRequest);
     }
 
-    function vote(bytes32 circleID, uint256 requestIndex, bool approved) isMember(circleID) external {
+    function vote(bytes32 circleID, uint256 requestIndex, bool approved) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         Request storage req = circle.requests[requestIndex];
-        uint256 threshold = circle.members.length * 0.51
+        uint256 threshold = circle.members.length / 2;
         if (circle.govType == GovernanceType.dictator && circle.owner == msg.sender) {
             if (approved) approveRequest(circleID, requestIndex);
             else deleteRequest(circleID, requestIndex);
@@ -209,30 +219,28 @@ contract Circle is ReentrancyGuard, Ownable, Initializable {
         Circle storage circle = circles[circleID];
         Request storage req = circle.requests[requestIndex];
         withdrawMoola(circleID, req.amount);
-        ERC20(circle.tokenAddr).safeTransfer(req.requester, req.amount);
+        //ERC20(circle.tokenAddr).safeTransfer(req.requester, req.amount);
         circle.memberInfo[req.requester].balance -= req.amount;
         deleteRequest(circleID, requestIndex);
     }
 
     function deleteRequest(bytes32 circleID, uint256 requestIndex) private {
         Circle storage circle = circles[circleID];
-        Request storage req = circle.requests[requestIndex];
         circle.requests[requestIndex] = circle.requests[circle.requests.length - 1];
         delete circle.requests[circle.requests.length - 1];
-        circle.requests.length--;
     }
 
     function withdraw(bytes32 circleID, uint256 amt) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         require(circle.memberInfo[msg.sender].balance >= amt, "Cannot withdraw more than deposited");
         withdrawMoola(circleID, amt);
-        ERC20(circle.tokenAddr).safeTransfer(msg.sender, amt);
+        //ERC20(circle.tokenAddr).safeTransfer(msg.sender, amt);
         circle.memberInfo[msg.sender].balance -= amt;
-    };
+    }
 
     function withdrawMoola(bytes32 circleID, uint256 amt) private {
         Circle storage circle = circles[circleID];
         LendingPool moola = getLendingPool();
-        moola.redeemUnderlying(circle.tokenAddr, address(this), amt);
+        moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
     }
 }
