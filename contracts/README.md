@@ -8,7 +8,7 @@
 - MoolaConnector: `0xfd2e55632e53472F2CEDd2Da7eE7a02209367394`
 - ExchangeConnector: `0xf0C7e841f6F77EC6DC8DB51770D7510cFAd17cE9`
 - CentroWallet: `0x043715CB875Ef7db8A1681cb223571f997a362ee`
-- SavingCircle: `0xfAFD80416C6FB5d132c7c822220d473f8100020d`
+- SavingCircle: `0x6f4B4c14e141a55433A71a60FC372dAF15208A38`
 
 ## CentroMain - Forward-facing Contract
 

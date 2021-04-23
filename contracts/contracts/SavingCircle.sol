@@ -1,13 +1,13 @@
-pragma solidity >=0.4.7;
+pragma solidity ^0.8.0;
 
 //import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 //import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 //import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-//import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 //import "./utils/IERC20Token.sol";
 
-contract ILendingPoolAddressesProvider {
-    function getLendingPool() public view returns (address);
+abstract contract ILendingPoolAddressesProvider {
+    function getLendingPool() public view virtual returns (address);
 }
 
 interface LendingPool {
@@ -94,7 +94,7 @@ contract SavingCircle {
     }
     
    
-    function receive() public payable {}
+    receive() external payable {}
 
     function startNewCycle(bytes32 circle) public newCycle(circle) {
         Circle storage circ = circles[circle];
@@ -181,8 +181,8 @@ contract SavingCircle {
         Circle storage circle = circles[circleID];
         LendingPool moola = getLendingPool();
         require(token == circle.tokenAddress, "Incorrect token!");
-        //ERC20(token).safeTransferFrom(msg.sender, address(this), value);
-        //ERC20(token).approve(address(moola), value);
+        ERC20(token).transferFrom(msg.sender, address(this), value);
+        ERC20(token).approve(address(moola), value);
         moola.deposit(token, value, 0);
         circle.total += value;
         circle.memberInfo[msg.sender].balance += value;
@@ -218,7 +218,8 @@ contract SavingCircle {
         Circle storage circle = circles[circleID];
         Request storage req = circle.requests[requestIndex];
         withdrawMoola(circleID, req.amount);
-        //ERC20(circle.tokenAddr).safeTransfer(req.requester, req.amount);
+        ERC20(circle.tokenAddress).approve(req.requester, req.amount);
+        ERC20(circle.tokenAddress).transfer(req.requester, req.amount);
         circle.memberInfo[req.requester].balance -= req.amount;
         deleteRequest(circleID, requestIndex);
     }
@@ -233,13 +234,14 @@ contract SavingCircle {
         Circle storage circle = circles[circleID];
         require(circle.memberInfo[msg.sender].balance >= amt, "Cannot withdraw more than deposited");
         withdrawMoola(circleID, amt);
-        //ERC20(circle.tokenAddr).safeTransfer(msg.sender, amt);
+        ERC20(circle.tokenAddress).approve(msg.sender, amt);
+        ERC20(circle.tokenAddress).transfer(msg.sender, amt);
         circle.memberInfo[msg.sender].balance -= amt;
     }
 
     function withdrawMoola(bytes32 circleID, uint256 amt) private {
         Circle storage circle = circles[circleID];
         LendingPool moola = getLendingPool();
-        moola.redeemUnderlying(circle.tokenAddress, address(uint160(address(this))), amt, 0);
+        moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
     }
 }
