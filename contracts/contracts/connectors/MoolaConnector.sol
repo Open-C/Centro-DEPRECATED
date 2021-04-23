@@ -1,8 +1,8 @@
 pragma solidity ^0.5.0;
 
-import "../Interfaces/ILendingPool.sol";
-import "../Interfaces/ILendingPoolAddressProvider.sol";
-import "../Interfaces/IERC20Token.sol";
+import "../interfaces/ILendingPool.sol";
+import "../interfaces/ILendingPoolAddressProvider.sol";
+import "../interfaces/IERC20Token.sol";
 import "../ContractCaller.sol";
 
 contract MoolaHelper {
@@ -19,7 +19,6 @@ contract IStorage {
 }
 
 contract MoolaConnector is ContractCaller {
-
 	address store;
 	address owner;
 	mapping(address => uint256) private deposited;
@@ -27,24 +26,23 @@ contract MoolaConnector is ContractCaller {
 	mapping (address => bool) auth;
 
 
-	function deposit(address _token, uint256 _amt) external payable {
+	function deposit(address _token, uint256 _amount) external payable {
 		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(IStorage(store).getAddressProvider("moola"));        
 		ILendingPool moola = ILendingPool(lpa.getLendingPool());
 		if (_token != IStorage(store).getEthAddress()) {
 			IERC20Token token = IERC20Token(_token);
-			require(_amt <= token.balanceOf(address(this)), "Not enough moneys.");
-			token.approve(address(moola), _amt);
-			moola.deposit(_token, _amt, 0);
-
+			require(_amount <= token.balanceOf(address(this)), "Not enough moneys.");
+			token.approve(address(moola), _amount);
+			moola.deposit(_token, _amount, 0);
 		} else {
 			moola.deposit.value(msg.value)(_token, msg.value, 0);
 		}
 	}
 
-	function withdraw(address _token, uint256 _amt) external payable {
+	function withdraw(address _token, uint256 _amount) external payable {
 		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(IStorage(store).getAddressProvider("moola"));        
 		ILendingPool moola = ILendingPool(lpa.getLendingPool());
-		moola.redeemUnderlying(_token, address(this), _amt, 0);
+		moola.redeemUnderlying(_token, address(this), _amount, 0);
 	}
 
 	function getBalance(address[] calldata _tokens) external view returns (uint256[] memory) {

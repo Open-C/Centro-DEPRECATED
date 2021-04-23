@@ -3,8 +3,7 @@ pragma solidity >0.5.0;
 contract ContractCaller {
 	function delegate(address _target, bytes memory _calldata) internal returns (bytes memory response) {
 		require(_target != address(0), "Target invalid!");
-		(bool success, bytes memory returnData) =
-			_target.delegatecall(_calldata);
+		(bool success, bytes memory returnData) = _target.delegatecall(_calldata);
 
 		assembly {
 			if eq(success, 0) {
@@ -33,8 +32,7 @@ contract ContractCaller {
 
 	function sendCelo(address payable _target, uint256 _value, bytes memory _calldata) internal returns (bytes memory response) {
 		require(_target != address(0), "Target invalid!");
-		(bool success, bytes memory returnData) =
-			_target.call.value(_value)(_calldata);
+		(bool success, bytes memory returnData) = _target.call.value(_value)(_calldata);
 
 		assembly {
 			if eq(success, 0) {

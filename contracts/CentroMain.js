@@ -24,7 +24,7 @@ async function initContract() {
 	//await addWallet(instance, "Test2");
 	//await addWallet(instance, "Test3");
 
-	console.log(await instance.methods.getAccountIds(account.address).call());
+	console.log(await instance.methods.getAccountIDs(account.address).call());
 	const walletAddr = await instance.methods.getWalletAddress(1).call();
 	console.log(walletAddr);
 	console.log(await instance.methods.getWalletAddress(2).call());
