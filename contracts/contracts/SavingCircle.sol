@@ -134,7 +134,7 @@ contract SavingCircle {
         return memberships[user];
     }
 
-    function getCircleInfo(bytes32 circle) public view isMember(circle) returns (address[] memory, address, uint256, uint256, GovernanceType) {
+    function getCircleInfo(bytes32 circle) public view returns (address[] memory, address, uint256, uint256, GovernanceType) {
         Circle storage circ = circles[circle];
         return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.cycleTime, circ.govType);
     }
