@@ -28,6 +28,18 @@ async function initContract() {
   console.log(circle.options.address);
   await testCircleCreation(circle, account);
   await testDeposit(circle, account);
+  await testWithdraw(circle, account);
+  await testRequest(circle, account);
+}
+
+async function testRequest(circle, account) {
+  const circleIDs = await circle.methods.getCircles(account.address).call();
+  await request(circle, circleIDs[0], 100);
+}
+
+async function testWithdraw(circle, account) {
+  const circleIDs = await circle.methods.getCircles(account.address).call();
+  await withdraw(circle, circleIDs[0], 2);
 }
 
 async function testDeposit(circle, account) {
@@ -98,6 +110,28 @@ async function deposit(contract, circleId, token, amt) {
     token.address,
     amount
   );
+  const tx = await kit.sendTransaction(txObject, { from: account.address });
+  const receipt = await tx.waitReceipt();
+  console.log(receipt);
+}
+
+async function withdraw(contract, circleId, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt + "");
+
+  const txObject = await contract.methods.withdraw(circleId, amount);
+  const tx = await kit.sendTransaction(txObject, { from: account.address });
+  const receipt = await tx.waitReceipt();
+  console.log(receipt);
+}
+
+async function request(contract, circleId, amt) {
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(amt + "");
+
+  const txObject = await contract.methods.request(circleId, amount);
   const tx = await kit.sendTransaction(txObject, { from: account.address });
   const receipt = await tx.waitReceipt();
   console.log(receipt);
