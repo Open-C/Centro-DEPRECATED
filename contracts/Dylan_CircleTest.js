@@ -1,10 +1,14 @@
 const Web3 = require("web3");
 const ContractKit = require("@celo/contractkit");
-const fs = require("fs");
-const accounts = path.join(__dirname, "./accounts.json");
-
+const accounts = require("./accounts.json");
 // 2. Import the getAccount function
 const getAccount = require("./getAccount").getAccount;
+
+const GOV_TYPE = {
+  ANARCHY: 0,
+  DEMOCRATIC: 1,
+  DICTATOR: 2,
+};
 
 // 3. Init a new kit, connected to the alfajores testnet
 const web3 = new Web3("https://alfajores-forno.celo-testnet.org");
@@ -22,6 +26,46 @@ async function initContract() {
     deployedNetwork && deployedNetwork.address
   );
   console.log(circle.options.address);
+  console.log(await circle.methods.getCircles(account.address).call());
+  await createCircle(
+    circle,
+    "test1",
+    Object.keys(accounts.addrs).map((a) => String(accounts.addrs[a])),
+    gld,
+    5,
+    "Democratic",
+    30,
+    false
+  );
+}
+
+async function createCircle(
+  contract,
+  name,
+  members,
+  token,
+  minDeposit,
+  govType,
+  cycleLength,
+  autoStart
+) {
+  console.log(members);
+  let account = await getAccount();
+  kit.connection.addAccount(account.privateKey);
+  const amount = web3.utils.toWei(minDeposit + "");
+  const txObject = await contract.methods.createCircle(
+    name,
+    members,
+    token.address,
+    amount,
+    GOV_TYPE[govType],
+    cycleLength,
+    autoStart,
+    members.length
+  );
+  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
+  let receipt = await tx.waitReceipt();
+  console.log(receipt);
 }
 
 async function withdraw(instance, amt) {

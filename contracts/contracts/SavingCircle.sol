@@ -58,7 +58,7 @@ contract SavingCircle {
         mapping (address => User) memberInfo;
         address tokenAddress;
         uint cycleEnd;
-        uint cycleLength;
+        uint cycleTime;
         uint numCycles;
         uint256 depositRequirement;
         uint256 total;
@@ -96,10 +96,10 @@ contract SavingCircle {
    
     receive() external payable {}
 
-    function startNewCycle(bytes32 circle) public newCycle(circle) {
+    function startNewCycle(bytes32 circle) public circleExists(circle) newCycle(circle) {
         Circle storage circ = circles[circle];
         circ.numCycles++;
-        circ.cycleEnd = block.timestamp + (circ.cycleLength * (1 days));
+        circ.cycleEnd = block.timestamp + (circ.cycleTime * (1 days));
         for (uint i = 0; i < circ.members.length; i++) {
             uint amtContributed = circ.memberInfo[circ.members[i]].amtContributed;
             if (amtContributed < circ.depositRequirement) {
@@ -112,7 +112,7 @@ contract SavingCircle {
         }
     }
 
-    function queryMissedPayments(bytes32 circleID) public view isMember(circleID) returns (address[] memory _addresses, uint[] memory _missedPayments) {
+    function queryMissedPayments(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (address[] memory _addresses, uint[] memory _missedPayments) {
         mapping(address => User) storage memberInfo = circles[circleID].memberInfo;
         _addresses = circles[circleID].members;
         uint[] memory missed = new uint[](_addresses.length);
@@ -126,7 +126,7 @@ contract SavingCircle {
         return LendingPool(lpa.getLendingPool());
     }
 
-    function getMembers(bytes32 circle) public view returns (address[] memory) {
+    function getMembers(bytes32 circle) public view circleExists(circle) returns (address[] memory) {
         return circles[circle].members;
     }
 
@@ -136,10 +136,11 @@ contract SavingCircle {
 
     function getCircleInfo(bytes32 circle) public view isMember(circle) returns (address[] memory, address, uint256, uint256, GovernanceType) {
         Circle storage circ = circles[circle];
-        return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.cycleLength, circ.govType);
+        return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.cycleTime, circ.govType);
     }
 
-    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleLength, bool autoStart) external {
+    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleTime, bool autoStart, uint size) external {
+        require(members[0] != address(0), "Must contain members");
         bytes32 name = keccak256(abi.encodePacked(uuid));
         Circle storage circle = circles[name];
 
@@ -148,13 +149,13 @@ contract SavingCircle {
         circle.tokenAddress = tokenAddr;
         circle.depositRequirement = depositAmount;
         circle.govType = govType;
-        circle.cycleLength = cycleLength;
+        circle.cycleTime = cycleTime;
         
         if (autoStart) {
-            circle.cycleEnd = block.timestamp + (cycleLength * (1 days));
+            circle.cycleEnd = block.timestamp + (cycleTime * (1 days));
         }
 
-        for (uint256 i = 0; i < members.length; i++) {
+        for (uint256 i = 0; i < size; i++) {
             memberships[members[i]].push(name);
         }
     }
