@@ -25,16 +25,16 @@ async function initContract() {
   );
   console.log(circle.options.address);
   await testCircleCreation(circle, account);
-  await testDeposit(circle, account);
-  await testWithdraw(circle, account);
-  await testRequest(circle, account);
+  //await testDeposit(circle, account);
+  //await testWithdraw(circle, account);
+  //await testRequest(circle, account);
   await testGetBalances(circle, account);
   await testQueryMissedPayments(circle, account);
 }
 
 async function testQueryMissedPayments(circle, account) {
   const circleIDs = await circle.methods.getCircles(account.address).call();
-  console.log(await queryMissedBalances(circleIDs[0]));
+  console.log(await queryMissedPayments(circle, circleIDs[0]));
 }
 
 async function testGetBalances(circle, account) {
@@ -157,8 +157,8 @@ async function getBalances(contract, circleID) {
   return await contract.methods.getBalances(circleID).call();
 }
 
-async function queryMissedBalances(contract, circleID) {
-  return await contract.methods.queryMissedBalances(circleID);
+async function queryMissedPayments(contract, circleID) {
+  return await contract.methods.queryMissedPayments(circleID).call();
 }
 
 const retry = async (fun, tries = 5) => {
