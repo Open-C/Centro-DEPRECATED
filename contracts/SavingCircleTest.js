@@ -25,7 +25,7 @@ async function initContract() {
   );
   console.log(circle.options.address);
   await testCircleCreation(circle, account);
-  //await testDeposit(circle, account);
+  await testDeposit(circle, account);
   //await testWithdraw(circle, account);
   //await testRequest(circle, account);
   await testGetBalances(circle, account);
@@ -54,9 +54,9 @@ async function testWithdraw(circle, account) {
 }
 
 async function testDeposit(circle, account) {
-  const gld = await kit.contracts.getGoldToken();
+  const gld = await kit.contracts.getStableToken();
   const circleIDs = await circle.methods.getCircles(account.address).call();
-  await deposit(circle, circleIDs[0], gld, 5);
+  await deposit(circle, circleIDs[0], gld, 1);
 }
 
 async function testCircleCreation(circle, account) {
@@ -110,21 +110,35 @@ async function deposit(contract, circleId, token, amt) {
   let account = await getAccount();
   kit.connection.addAccount(account.privateKey);
   const amount = web3.utils.toWei(amt + "");
-
+  console.log(contract._address);
+  console.log(contract.options.address);
   const approveTx = await token
-    .approve(contract.options.address, amount)
+    .approve(contract._address, amount)
     .send({ from: account.address });
   const approveReceipt = await approveTx.waitReceipt();
   console.log(approveReceipt);
 
-  const txObject = await contract.methods.deposit(
-    circleId,
-    token.address,
-    amount
+  // const txObject = await contract.methods.deposit(
+  //   circleId,
+  //   token.address,
+  //   amount
+  // );
+  // const tx = await kit.sendTransaction(txObject, {
+  //   from: account.address,
+  //   value: 0,
+  // });
+  // const receipt = await tx.waitReceipt();
+  // console.log(receipt);
+  console.log(
+    await contract.methods
+      .deposit(circleId, token.address, amount)
+      .send({ from: account.address })
   );
-  const tx = await kit.sendTransaction(txObject, { from: account.address });
-  const receipt = await tx.waitReceipt();
-  console.log(receipt);
+  console.log(
+    await contract.methods
+      .moveToMoola(circleId, token.address, amount)
+      .send({ from: account.address })
+  );
 }
 
 async function getRequests(contract, circleID) {
@@ -147,10 +161,12 @@ async function request(contract, circleId, amt) {
   kit.connection.addAccount(account.privateKey);
   const amount = web3.utils.toWei(amt + "");
 
-  const txObject = await contract.methods.request(circleId, amount);
-  const tx = await kit.sendTransaction(txObject, { from: account.address });
-  const receipt = await tx.waitReceipt();
-  console.log(receipt);
+  const tx = await contract.methods
+    .request(circleId, amount)
+    .send({ from: account.address });
+  //const tx = await kit.sendTransaction(txObject, { from: account.address });
+  //const receipt = await tx.waitReceipt();
+  console.log(tx);
 }
 
 async function getBalances(contract, circleID) {

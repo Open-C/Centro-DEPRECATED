@@ -3,11 +3,12 @@ pragma solidity ^0.8.0;
 //import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 //import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 //import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 //import "./utils/IERC20Token.sol";
 
 abstract contract ILendingPoolAddressesProvider {
     function getLendingPool() public view virtual returns (address);
+    function getLendingPoolCore() public view virtual returns (address payable);
 }
 
 interface LendingPool {
@@ -126,6 +127,10 @@ contract SavingCircle {
         return LendingPool(lpa.getLendingPool());
     }
 
+    function getLendingPoolCore() private view returns (address payable) {
+        return lpa.getLendingPoolCore();
+    }
+
     function getMembers(bytes32 circle) public view circleExists(circle) returns (address[] memory) {
         return circles[circle].members;
     }
@@ -174,6 +179,7 @@ contract SavingCircle {
 
         for (uint256 i = 0; i < size; i++) {
             memberships[members[i]].push(name);
+            circle.memberInfo[members[i]].isAlive = true;
         }
     }
 
@@ -195,18 +201,32 @@ contract SavingCircle {
         return (_moola, circle.total);
     }
 
-    function deposit(bytes32 circleID, address token, uint256 value) circleExists(circleID) isMember(circleID) payable external {
+
+
+    function deposit(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
+        require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
         Circle storage circle = circles[circleID];
-        LendingPool moola = getLendingPool();
         require(token == circle.tokenAddress, "Incorrect token!");
-        ERC20(token).transferFrom(msg.sender, address(this), value);
-        ERC20(token).approve(address(moola), value);
-        moola.deposit(token, value, 0);
+
+        IERC20(token).transferFrom(msg.sender, address(this), value);
+
         circle.total += value;
         circle.memberInfo[msg.sender].balance += value;
         circle.memberInfo[msg.sender].amtContributed += value;
         totalBasis[token] += value;
     }
+
+    function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external {
+        require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
+        Circle storage circle = circles[circleID];
+        require(token == circle.tokenAddress, "Incorrect token!");
+
+        LendingPool moola = getLendingPool();
+        address payable lpCore = getLendingPoolCore();
+        IERC20(token).approve(lpCore, value);
+        moola.deposit(token, value, 0);
+    }
+
     function request(bytes32 circleID, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         Request memory newRequest;
@@ -236,8 +256,8 @@ contract SavingCircle {
         Circle storage circle = circles[circleID];
         Request storage req = circle.requests[requestIndex];
         withdrawMoola(circleID, req.amount);
-        ERC20(circle.tokenAddress).approve(req.requester, req.amount);
-        ERC20(circle.tokenAddress).transfer(req.requester, req.amount);
+        IERC20(circle.tokenAddress).approve(req.requester, req.amount);
+        IERC20(circle.tokenAddress).transfer(req.requester, req.amount);
         circle.memberInfo[req.requester].balance -= req.amount;
         deleteRequest(circleID, requestIndex);
     }
@@ -252,8 +272,8 @@ contract SavingCircle {
         Circle storage circle = circles[circleID];
         require(circle.memberInfo[msg.sender].balance >= amt, "Cannot withdraw more than deposited");
         withdrawMoola(circleID, amt);
-        ERC20(circle.tokenAddress).approve(msg.sender, amt);
-        ERC20(circle.tokenAddress).transfer(msg.sender, amt);
+        IERC20(circle.tokenAddress).approve(msg.sender, amt);
+        IERC20(circle.tokenAddress).transfer(msg.sender, amt);
         circle.memberInfo[msg.sender].balance -= amt;
     }
 
