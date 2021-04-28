@@ -18,8 +18,6 @@ const SavingCircle = require("./build/contracts/SavingCircle.json");
 async function initContract() {
   const networkId = await web3.eth.net.getId();
   const deployedNetwork = SavingCircle.networks[networkId];
-  const gld = await kit.contracts.getGoldToken();
-  const stable = await kit.contracts.getStableToken();
   let account = await getAccount();
   let circle = new web3.eth.Contract(
     SavingCircle.abi,
@@ -30,11 +28,24 @@ async function initContract() {
   await testDeposit(circle, account);
   await testWithdraw(circle, account);
   await testRequest(circle, account);
+  await testGetBalances(circle, account);
+  await testQueryMissedPayments(circle, account);
+}
+
+async function testQueryMissedPayments(circle, account) {
+  const circleIDs = await circle.methods.getCircles(account.address).call();
+  console.log(await queryMissedBalances(circleIDs[0]));
+}
+
+async function testGetBalances(circle, account) {
+  const circleIDs = await circle.methods.getCircles(account.address).call();
+  console.log(await getBalances(circle, circleIDs[0]));
 }
 
 async function testRequest(circle, account) {
   const circleIDs = await circle.methods.getCircles(account.address).call();
   await request(circle, circleIDs[0], 100);
+  console.log(await getRequests(circle, circleIDs[0]));
 }
 
 async function testWithdraw(circle, account) {
@@ -50,6 +61,7 @@ async function testDeposit(circle, account) {
 
 async function testCircleCreation(circle, account) {
   let circleIDs = await circle.methods.getCircles(account.address).call();
+  const gld = await kit.contracts.getStableToken();
   if (circleIDs.length == 0) {
     await createCircle(
       circle,
@@ -115,6 +127,10 @@ async function deposit(contract, circleId, token, amt) {
   console.log(receipt);
 }
 
+async function getRequests(contract, circleID) {
+  return await contract.methods.getRequests(circleID).call();
+}
+
 async function withdraw(contract, circleId, amt) {
   let account = await getAccount();
   kit.connection.addAccount(account.privateKey);
@@ -135,6 +151,14 @@ async function request(contract, circleId, amt) {
   const tx = await kit.sendTransaction(txObject, { from: account.address });
   const receipt = await tx.waitReceipt();
   console.log(receipt);
+}
+
+async function getBalances(contract, circleID) {
+  return await contract.methods.getBalances(circleID).call();
+}
+
+async function queryMissedBalances(contract, circleID) {
+  return await contract.methods.queryMissedBalances(circleID);
 }
 
 const retry = async (fun, tries = 5) => {

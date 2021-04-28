@@ -112,7 +112,7 @@ contract SavingCircle {
         }
     }
 
-    function queryMissedPayments(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (address[] memory _addresses, uint[] memory _missedPayments) {
+    function queryMissedPayments(bytes32 circleID) public view circleExists(circleID) returns (address[] memory _addresses, uint[] memory _missedPayments) {
         mapping(address => User) storage memberInfo = circles[circleID].memberInfo;
         _addresses = circles[circleID].members;
         uint[] memory missed = new uint[](_addresses.length);
@@ -139,6 +139,23 @@ contract SavingCircle {
         return (circ.members, circ.tokenAddress, circ.depositRequirement, circ.cycleTime, circ.govType);
     }
 
+    function getRequests(bytes32 circleID) public view circleExists(circleID) returns (uint[] memory _approvals, uint[] memory _denials, address[] memory _addresses, uint256[] memory _amounts) {
+        Request[] storage requests = circles[circleID].requests;
+        uint len = requests.length;
+        _approvals = new uint[](len);
+        _denials = new uint[](len);
+        _addresses = new address[](len);
+        _amounts = new uint256[](len);
+        for (uint i = 0; i < len; i++) {
+            Request memory cur = requests[i];
+            _approvals[i] = cur.approvals;
+            _denials[i] = cur.denials;
+            _addresses[i] = cur.requester;
+            _amounts[i] = cur.amount;
+        }
+        
+    }
+
     function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleTime, bool autoStart, uint size) external {
         require(members[0] != address(0), "Must contain members");
         bytes32 name = keccak256(abi.encodePacked(uuid));
@@ -160,7 +177,7 @@ contract SavingCircle {
         }
     }
 
-    function getBalances(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (address[] memory, uint256[] memory) {
+    function getBalances(bytes32 circleID) public view circleExists(circleID) returns (address[] memory, uint256[] memory) {
         Circle storage circle = circles[circleID];
         uint256[] memory balances = new uint256[](circle.members.length);
 
@@ -170,7 +187,7 @@ contract SavingCircle {
         return (circle.members, balances);
     }
 
-    function getTotalBalance(bytes32 circleID) public view circleExists(circleID) isMember(circleID) returns (uint256, uint256) {
+    function getTotalBalance(bytes32 circleID) public view circleExists(circleID) returns (uint256, uint256) {
         LendingPool moola = getLendingPool();
         Circle storage circle = circles[circleID];
         (uint256 _moola, , , , , , , , , ) = moola.getUserReserveData(circle.tokenAddress, address(this));
