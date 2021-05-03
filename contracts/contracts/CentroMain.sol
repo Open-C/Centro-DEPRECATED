@@ -131,13 +131,13 @@ contract CentroMain is WalletFactory {
 
 	function buyCelo(uint256 _amount, uint256 _maxSellAmount, uint256 _walletID) external {
 		CentroWallet wallet = _getWallet(_walletID);
-		bytes memory data = abi.encodeWithSignature("buyCelo(uint256, uint256)", _amount, _maxSellAmount);
+		bytes memory data = abi.encodeWithSignature("buyCelo(uint256,uint256)", _amount, _maxSellAmount);
 		wallet.callConnector(msg.sender, store.getConnector("exchange"), data);
 	}
 
 	function sellCelo(uint256 _amount, uint256 _minBuyAmount, uint256 _walletID) external {
 		CentroWallet wallet = _getWallet(_walletID);
-		bytes memory data = abi.encodeWithSignature("sellCelo(uint256, uint256)", _amount, _minBuyAmount);
+		bytes memory data = abi.encodeWithSignature("sellCelo(uint256,uint256)", _amount, _minBuyAmount);
 		wallet.callConnector(msg.sender, store.getConnector("exchange"), data);
 	}
 
