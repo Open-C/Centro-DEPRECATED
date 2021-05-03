@@ -1,1 +1,6 @@
-{ "addrs": { "Dylan": "0xe3764321f5E5b236B9899778DbFbf0bA039af9c7" } }
+{
+  "addrs": {
+    "Dylan": "0xe3764321f5E5b236B9899778DbFbf0bA039af9c7",
+    "human": "0xF0Cee1E4145c56c5cb7D35479CF9990B17B56670"
+  }
+}

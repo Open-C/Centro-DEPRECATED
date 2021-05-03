@@ -216,7 +216,7 @@ contract SavingCircle {
         totalBasis[token] += value;
     }
 
-    function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external {
+    function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
         require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
         Circle storage circle = circles[circleID];
         require(token == circle.tokenAddress, "Incorrect token!");
