@@ -1,132 +1,182 @@
 pragma solidity >0.5.0;
 
-//import "@openzeppelin/contracts/math/SafeMath.sol";
-//import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-//import "@openzeppelin/contracts/utils/Address.sol";
-//import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-//import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./Storage.sol";
-import "./Types.sol";
-//import "../connectors/MoolaC.sol";
-import "../interfaces/IERC20Token.sol";
-import "../ContractCaller.sol";
-import "../interfaces/ILendingPool.sol";
-import "../interfaces/ILendingPoolAddressProvider.sol";
+import "./registry/Storage.sol";
+import "./registry/Types.sol";
+import "./registry/CentroWallet.sol";
+import "./interfaces/ILendingPool.sol";
+import "./interfaces/ILendingPoolAddressProvider.sol";
 
-contract CentroWallet is ContractCaller {
-	//using SafeMath for uint256;
+contract WalletFactory is Types {
+	mapping(address => uint256[]) public addressToWalletIDs;
+	mapping(uint256 => Wallet) public walletIDToWallet;
+	mapping(address => uint256) currentWallet;
+	uint256 numWallets;
+	Storage store;
+	address lastAdded;
+
+	function newWallet(string calldata name) external returns (bool) {
+		CentroWallet wallet = new CentroWallet(msg.sender, address(store));
+		address owner = msg.sender;
+		Wallet storage _wallet = walletIDToWallet[numWallets];
+		uint256[] storage walletIDs = addressToWalletIDs[owner];
+		lastAdded = owner;
+		uint256 walletID = numWallets;
+
+		_wallet.name = name;
+		_wallet.addr = address(wallet);
+		_wallet.owner = msg.sender;
+		walletIDs.push(walletID);
+		numWallets++;
+		currentWallet[msg.sender] = walletID;
+		return true;
+	}
+
+	function addWallet(address _user, address _loc, string memory name) private {
+		Wallet storage _wallet = walletIDToWallet[numWallets];
+		uint256[] storage walletIDs = addressToWalletIDs[_user];
+		_wallet.name = name;
+		_wallet.addr = _loc;
+		walletIDs.push(numWallets);
+		numWallets++;
+	}
+
+	function getAccountIDs(address _user) public view returns (uint256[] memory) {
+		require (addressToWalletIDs[_user].length > 0, "Address does not have any accounts");
+		return(addressToWalletIDs[_user]);
+	}
+
+	function getWallet(uint256 _walletID) public view returns (string memory, address) {
+		Wallet storage wallet = walletIDToWallet[_walletID];
+		require(wallet.addr != address(0), "Wallet does not exist");
+		return (wallet.name, wallet.addr);
+	}
+
+	function getWalletAddress(uint256 _walletID) public view returns (address) {
+		Wallet storage wallet = walletIDToWallet[_walletID];
+		require(wallet.addr != address(0), "Wallet does not exist");
+		return (wallet.addr);
+	}
+}
+
+contract MoolaIntegration is WalletFactory {
+    
+    function _getLendingPool() internal view returns (ILendingPool) {
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));
+        return ILendingPool(lpa.getLendingPool());
+    }
+    
+    function _getPoolCore() internal view returns (address payable) {
+        ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));
+        return lpa.getLendingPoolCore();
+    }
+    
+    function getMoolaBalance(address _token, uint256 _walletID) public view
+		returns (uint256 currentATokenBalance) {
+		CentroWallet wallet = _getWallet(_walletID);
+		ILendingPool moola = _getLendingPool();
+		(currentATokenBalance, , , , , , , , , ) = moola.getUserReserveData(_token, address(wallet));
+	}
 	
-	address store;
-	address owner;
-	mapping(address => uint256) private deposited;
-	address[] private tokenAddresses;
-	mapping(address => bool) isAuthorized;
-
-	constructor(address _owner, address _store) public {
-		owner = _owner;
-		isAuthorized[_owner] = true;
-		store = _store;
-	}
-
-	modifier isMain() {
-		require(msg.sender == Storage(store).getCentro() || msg.sender == owner, "Unauthorized access");
-		_;
-	}
-
-	event ConnectorCalled(address _loc, bytes data);
-
-	function receive() external payable {}
-
-	function deposit(address _from, address _token, uint256 _amount) payable external isMain {
-		if (_token != Storage(store).getEthAddress()) {
-			IERC20Token token = IERC20Token(_token);
-			require(_amount <= token.balanceOf(address(this)), "Not enough moneys.");
-			token.transferFrom(_from, address(this), _amount);
-		} // else, celo was sent and is auto-deposited
-		if (deposited[_token] == 0) {
-			tokenAddresses.push(_token);
-		}
-		deposited[_token] += _amount;
-	}
-
-	function withdraw(address payable _from, address _token, uint256 _amount) external isMain {
-		require(isAuthorized[_from], "Unauthorized withdraw");
-		if (_token != Storage(store).getEthAddress()) {
-			IERC20Token token = IERC20Token(_token);
-			uint256 amount = _amount == uint(0) ? token.balanceOf(address(this)) : _amount;
-			require(amount <= token.balanceOf(address(this)), "Insufficient funds");
-			token.approve(_from, amount);
-			token.transfer(_from, amount);
+	function moolaDeposit(address _token, uint256 _amount, uint256 _walletID) external payable {
+		CentroWallet wallet = _getWallet(_walletID);
+		ILendingPool moola = _getLendingPool();
+		bytes memory data = abi.encodeWithSignature("deposit(address,uint256,uint16)", _token, _amount, 0);
+		uint256 value = 0;
+		if (_token == Storage(store).getEthAddress()) {
+		    value = _amount;
 		} else {
-			_from.transfer(_amount);
-			// (bool success, ) = _from.call.value(_amount)("");
-			// require(success, "payment failed");
+		    wallet.approve(_token, _getPoolCore, _amount);
 		}
-
-		deposited[_token] -= _amount;
+		wallet.callContract(msg.sender, address(moola), value, data);
+	}
+	
+	function moolaWithdraw(address _token, uint256 _amount, uint256 _walletID) external payable {
+		CentroWallet wallet = _getWallet(_walletID);
+		ILendingPool moola = _getLendingPool();
+		bytes memory data = abi.encodeWithSignature("redeem(uint256)", _amount);
+		wallet.callContract(msg.sender, _token, data);
 	}
 
-	function send(address _from, address _token, address payable _to, uint256 _amount) payable external isMain {
-		require(isAuthorized[_from], "Unauthorized transfer.");
-		if (_token != Storage(store).getEthAddress()) {
-			IERC20Token token = IERC20Token(_token);
-			uint256 amount = _amount == uint(0) ? token.balanceOf(address(this)) : _amount;
-			require(amount <= token.balanceOf(address(this)), "Insufficient funds");
-			token.approve(_from, amount);
-			token.transfer(_from, amount);
-		} else {
-			_to.transfer(_amount);
-			// (bool success, ) = _from.call.value(_amount)("");
-			// require(success, "payment failed");
-		}
+}
 
-		deposited[_token] -= _amount;
+contract CentroMain is MoolaIntegration {
+	constructor (address _store) public WalletFactory(){
+		store = Storage(_store);
+		numWallets = 0;
 	}
 
-	function incrementBasis(address _token, uint256 _amount) external isMain {
-		deposited[_token] += _amount;
+	function persistWallet(uint256 _walletID) public returns (string memory) {
+		address wallet;
+		string memory name;
+		(name, wallet) = super.getWallet(_walletID);
+		currentWallet[msg.sender] = _walletID;
+		return name;
+	} 
+
+	function _getWallet(uint256 _walletID) internal view returns (CentroWallet) {
+		uint256 walletID = _walletID == 0 ? currentWallet[msg.sender] : _walletID;
+		require(walletID != 0, "Provide a wallet id, or persist a wallet.");
+		address wallet;
+		string memory name;
+		(name, wallet) = super.getWallet(walletID);
+		return (CentroWallet(wallet));
 	}
 
-	function getBasis(address _from) public isMain view returns (address[] memory, uint256[] memory) {
-		require(isAuthorized[_from], "Unauthorized query.");
-		uint256[] memory _bal = new uint256[](tokenAddresses.length);
-		for (uint i = 0; i < tokenAddresses.length; i++) {
-			_bal[i] = deposited[tokenAddresses[i]];
-		}
-		return (tokenAddresses, _bal);
-	}
-
-	function depositMoola(address _from, address _token, uint256 _amount) external payable isMain {
-		require(isAuthorized[_from], "Unauthorized query.");
-		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));		
-		ILendingPool moola = ILendingPool(lpa.getLendingPool());
-		if (_token != Storage(store).getEthAddress()) {
-			IERC20Token token = IERC20Token(_token);
-			require(_amount <= token.balanceOf(address(this)), "Not enough moneys.");
-			token.approve(address(moola), _amount);
-			moola.deposit.value(0)(_token, _amount, 0);
-
-		} else {
-			moola.deposit.value(_amount)(_token, _amount, 0);
+	function getAccountOverview() public view returns (address[] memory, uint256[] memory) {
+		uint256[] memory walletIDs = addressToWalletIDs[msg.sender];
+		address[] memory addresses = new address[](walletIDs.length);
+		for (uint256 i = 0; i < walletIDs.length; i++) {
+			address wallet;
+			string memory name;
+			(name, wallet) = super.getWallet(walletIDs[i]);
+			addresses[i] = wallet;
 		}
 	}
 
-	function withdrawMoola(address _from, address _token, uint256 _amount) external isMain {
-		require(isAuthorized[_from], "Unauthorized query.");
-		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));		
-		ILendingPool moola = ILendingPool(lpa.getLendingPool());
-		moola.redeemUnderlying(_token, address(this), _amount, 0);
+	function getWalletBalance(uint256 _walletID) public view returns (address[] memory tokens, uint256[] memory balances) {
+		CentroWallet wallet = _getWallet(_walletID);
+		return wallet.getBasis(msg.sender);
 	}
 
-	function callConnector(address _from, address _target, bytes calldata _calldata) external payable returns (bytes memory){
-		require(isAuthorized[_from], "Unauthorized connector call");
-		emit ConnectorCalled(_target, _calldata);
-		return delegate(_target, _calldata);
+	
+	function deposit(address _token, uint256 _amount, uint256 _walletID) external payable {
+		CentroWallet wallet = _getWallet(_walletID);
+		wallet.deposit.value(msg.value)(msg.sender, _token, _amount);
 	}
 
-	function contractCall(address _from, uint256 _amount, address payable _target, bytes calldata _calldata) external payable returns (bytes memory){
-		require(isAuthorized[_from], "Unauthorized connector call");
-		emit ConnectorCalled(_target, _calldata);
-		return sendCelo(_target, _amount, _calldata);
+	function encodeSelector(bytes memory selector) pure private returns (bytes4) {
+		return (bytes4(keccak256(selector)));
+	}
+
+	function withdraw(address _token, uint256 _amount, uint256 _walletID) external payable {
+		CentroWallet wallet = _getWallet(_walletID);
+		wallet.withdraw(msg.sender, _token, _amount);
+	}
+
+	
+	function buyCelo(uint256 _amount, uint256 _maxSellAmount, uint256 _walletID) external {
+		CentroWallet wallet = _getWallet(_walletID);
+		bytes memory data = abi.encodeWithSignature("buyCelo(uint256,uint256)", _amount, _maxSellAmount);
+		wallet.callConnector(msg.sender, store.getConnector("exchange"), data);
+	}
+
+	function sellCelo(uint256 _amount, uint256 _minBuyAmount, uint256 _walletID) external {
+		CentroWallet wallet = _getWallet(_walletID);
+		bytes memory data = abi.encodeWithSignature("sellCelo(uint256,uint256)", _amount, _minBuyAmount);
+		wallet.callConnector(msg.sender, store.getConnector("exchange"), data);
+	}
+
+	function send(address _token, uint256 _receiver, uint256 _amount, uint256 _walletID) payable external {
+		CentroWallet from = _getWallet(_walletID);
+		CentroWallet to = _getWallet(_receiver);
+		from.send(msg.sender, _token, address(uint160(address(to))), _amount);
+		to.incrementBasis(_token, _amount);
+	}
+
+	function callConnector(string calldata _connector, bytes calldata _calldata, uint256 _walletID) external {
+		address target = store.getConnector(_connector);
+		require(target != address(0), "Not a valid connector name");
+		CentroWallet wallet = _getWallet(_walletID);
+		wallet.callConnector(msg.sender, target, _calldata);
 	}
 }
