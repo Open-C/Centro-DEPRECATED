@@ -4,7 +4,7 @@ pragma solidity >0.5.0;
 //import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 //import "@openzeppelin/contracts/utils/Address.sol";
 //import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-//import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./Storage.sol";
 import "./Types.sol";
 //import "../connectors/MoolaC.sol";
@@ -14,13 +14,22 @@ import "../interfaces/ILendingPool.sol";
 import "../interfaces/ILendingPoolAddressProvider.sol";
 
 contract CentroWallet is ContractCaller {
-	//using SafeMath for uint256;
+	using SafeMath for uint256;
 	
 	address store;
 	address owner;
 	mapping(address => uint256) private deposited;
 	address[] private tokenAddresses;
+	enum Role {
+	    owner,
+	    admin,
+	    contributor,
+	    beneficiary
+	} 
+	
+	// Possibly do bit-masking for authorization levels instead of an enum.  bit 0 = can withdraw, bit 1 = can deposit, bit 2 = can control, bit 3 = beneficiary
 	mapping(address => bool) isAuthorized;
+	mapping(address => Role) roles;
 
 	constructor(address _owner, address _store) public {
 		owner = _owner;
@@ -32,12 +41,42 @@ contract CentroWallet is ContractCaller {
 		require(msg.sender == Storage(store).getCentro() || msg.sender == owner, "Unauthorized access");
 		_;
 	}
+	
+	modifier isAuth(address _address) {
+	    require(isAuthorized[_address], "User is not authorized to access this wallet");
+	    _;
+	}
+	
+	modifier excludeRole(address _address, Role _securityLevel) {
+	    require(roles[_address] != _securityLevel, "User is not the correct role for this operation");
+	    _;
+	}
+	
+	modifier onlyRole(Role _role, address _address) {
+	    require(roles[_address] == _role, "User is the incorrect role for this operation");
+	    _;
+	}
 
 	event ConnectorCalled(address _loc, bytes data);
+	event RoleAdded(address _user, Role _role);
+	event RoleRevoked(address _user, Role _role);
+	
 
 	function receive() external payable {}
+	
+	function addRole(address _from, address _toAdd, Role _role) public isMain isAuth(_from) onlyRole(Role.owner, _from) {
+	    isAuthorized[_toAdd] = true;
+	    roles[_toAdd] = _role;
+	    emit RoleAdded(_toAdd, _role);
+	}
+	
+	function revokeRole(address _from, address _toRevoke) public isMain isAuth(_from) onlyRole(Role.owner, _from) {
+	    require(_toRevoke != owner, "The original owner cannot be revoked");
+	    isAuthorized[_toRevoke] = false;
+	    emit RoleRevoked(_toRevoke, roles[_toRevoke]);
+	}
 
-	function deposit(address _from, address _token, uint256 _amount) payable external isMain {
+	function deposit(address _from, address _token, uint256 _amount) payable external isMain isAuth(_from) excludeRole(_from, Role.beneficiary){
 		if (_token != Storage(store).getEthAddress()) {
 			IERC20Token token = IERC20Token(_token);
 			require(_amount <= token.balanceOf(address(this)), "Not enough moneys.");
@@ -49,7 +88,7 @@ contract CentroWallet is ContractCaller {
 		deposited[_token] += _amount;
 	}
 
-	function withdraw(address payable _from, address _token, uint256 _amount) external isMain {
+	function withdraw(address payable _from, address _token, uint256 _amount) external isMain isAuth(_from) onlyRole(Role.owner, _from){
 		require(isAuthorized[_from], "Unauthorized withdraw");
 		if (_token != Storage(store).getEthAddress()) {
 			IERC20Token token = IERC20Token(_token);
@@ -66,7 +105,7 @@ contract CentroWallet is ContractCaller {
 		deposited[_token] -= _amount;
 	}
 
-	function send(address _from, address _token, address payable _to, uint256 _amount) payable external isMain {
+	function send(address _from, address _token, address payable _to, uint256 _amount) payable external isMain isAuth(_from) onlyRole(Role.owner, _from){
 		require(isAuthorized[_from], "Unauthorized transfer.");
 		if (_token != Storage(store).getEthAddress()) {
 			IERC20Token token = IERC20Token(_token);
@@ -87,7 +126,7 @@ contract CentroWallet is ContractCaller {
 		deposited[_token] += _amount;
 	}
 
-	function getBasis(address _from) public isMain view returns (address[] memory, uint256[] memory) {
+	function getBasis(address _from) public isMain isAuth(_from) view returns (address[] memory, uint256[] memory) {
 		require(isAuthorized[_from], "Unauthorized query.");
 		uint256[] memory _bal = new uint256[](tokenAddresses.length);
 		for (uint i = 0; i < tokenAddresses.length; i++) {
@@ -96,27 +135,6 @@ contract CentroWallet is ContractCaller {
 		return (tokenAddresses, _bal);
 	}
 
-	function depositMoola(address _from, address _token, uint256 _amount) external payable isMain {
-		require(isAuthorized[_from], "Unauthorized query.");
-		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));		
-		ILendingPool moola = ILendingPool(lpa.getLendingPool());
-		if (_token != Storage(store).getEthAddress()) {
-			IERC20Token token = IERC20Token(_token);
-			require(_amount <= token.balanceOf(address(this)), "Not enough moneys.");
-			token.approve(address(moola), _amount);
-			moola.deposit.value(0)(_token, _amount, 0);
-
-		} else {
-			moola.deposit.value(_amount)(_token, _amount, 0);
-		}
-	}
-
-	function withdrawMoola(address _from, address _token, uint256 _amount) external isMain {
-		require(isAuthorized[_from], "Unauthorized query.");
-		ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(Storage(store).getAddressProvider("moola"));		
-		ILendingPool moola = ILendingPool(lpa.getLendingPool());
-		moola.redeemUnderlying(_token, address(this), _amount, 0);
-	}
 
 	function callConnector(address _from, address _target, bytes calldata _calldata) external payable returns (bytes memory){
 		require(isAuthorized[_from], "Unauthorized connector call");
