@@ -25,11 +25,11 @@ async function initContract() {
   );
   console.log(circle.options.address);
   await testCircleCreation(circle, account);
-  await testDeposit(circle, account);
+  //await testDeposit(circle, account);
   //await testWithdraw(circle, account);
   //await testRequest(circle, account);
-  await testGetBalances(circle, account);
-  await testQueryMissedPayments(circle, account);
+  // await testGetBalances(circle, account);
+  // await testQueryMissedPayments(circle, account);
 }
 
 async function testQueryMissedPayments(circle, account) {
@@ -98,8 +98,7 @@ async function createCircle(
     amount,
     GOV_TYPE[govType],
     cycleLength,
-    autoStart,
-    members.length
+    autoStart
   );
   let tx = await kit.sendTransactionObject(txObject, { from: account.address });
   let receipt = await tx.waitReceipt();
