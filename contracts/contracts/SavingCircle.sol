@@ -13,7 +13,6 @@ abstract contract ILendingPoolAddressesProvider {
 
 interface LendingPool {
     function deposit(address, uint256, uint16) external payable;
-    function redeemUnderlying(address, address payable, uint256, uint256) external;
     function getUserReserveData(address _reserve, address _user) external view
         returns (
             uint256 currentATokenBalance,
@@ -27,6 +26,10 @@ interface LendingPool {
             uint256 lastUpdateTimestamp,
             bool usageAsCollateralEnabled
         );
+}
+
+interface AToken {
+    function redeem(uint256) external;
 }
 
 contract SavingCircle {
@@ -73,6 +76,8 @@ contract SavingCircle {
     event ContributionMade(address user, bytes32 circle, uint256 amount);
     event RequestMade(address requester, bytes32 circle, uint256 amount);
     event RequestGranted(address requester, bytes32 circle, uint256 amount);
+    
+    address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b);
 
     modifier onlyOwner(address owner) {
         require(msg.sender == owner);
@@ -94,7 +99,6 @@ contract SavingCircle {
         _;
     }
     
-   
     receive() external payable {}
 
     function startNewCycle(bytes32 circle) public circleExists(circle) newCycle(circle) {
@@ -161,7 +165,7 @@ contract SavingCircle {
         
     }
 
-    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleTime, bool autoStart, uint size) external {
+    function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleTime, bool autoStart) external {
         require(members[0] != address(0), "Must contain members");
         bytes32 name = keccak256(abi.encodePacked(uuid));
         Circle storage circle = circles[name];
@@ -177,7 +181,7 @@ contract SavingCircle {
             circle.cycleEnd = block.timestamp + (cycleTime * (1 days));
         }
 
-        for (uint256 i = 0; i < size; i++) {
+        for (uint256 i = 0; i < members.length; i++) {
             memberships[members[i]].push(name);
             circle.memberInfo[members[i]].isAlive = true;
         }
@@ -209,6 +213,11 @@ contract SavingCircle {
         require(token == circle.tokenAddress, "Incorrect token!");
 
         IERC20(token).transferFrom(msg.sender, address(this), value);
+        
+        LendingPool moola = getLendingPool();
+        address payable lpCore = getLendingPoolCore();
+        IERC20(token).approve(lpCore, value);
+        moola.deposit(token, value, 0);
 
         circle.total += value;
         circle.memberInfo[msg.sender].balance += value;
@@ -216,16 +225,16 @@ contract SavingCircle {
         totalBasis[token] += value;
     }
 
-    function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
-        require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
-        Circle storage circle = circles[circleID];
-        require(token == circle.tokenAddress, "Incorrect token!");
+    // function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
+    //     require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
+    //     Circle storage circle = circles[circleID];
+    //     require(token == circle.tokenAddress, "Incorrect token!");
 
-        LendingPool moola = getLendingPool();
-        address payable lpCore = getLendingPoolCore();
-        IERC20(token).approve(lpCore, value);
-        moola.deposit(token, value, 0);
-    }
+    //     LendingPool moola = getLendingPool();
+    //     address payable lpCore = getLendingPoolCore();
+    //     IERC20(token).approve(lpCore, value);
+    //     moola.deposit(token, value, 0);
+    // }
 
     function request(bytes32 circleID, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
@@ -255,7 +264,7 @@ contract SavingCircle {
     function approveRequest(bytes32 circleID, uint256 requestIndex) private {
         Circle storage circle = circles[circleID];
         Request storage req = circle.requests[requestIndex];
-        withdrawMoola(circleID, req.amount);
+        withdrawMoola(req.amount);
         IERC20(circle.tokenAddress).approve(req.requester, req.amount);
         IERC20(circle.tokenAddress).transfer(req.requester, req.amount);
         circle.memberInfo[req.requester].balance -= req.amount;
@@ -271,15 +280,16 @@ contract SavingCircle {
     function withdraw(bytes32 circleID, uint256 amt) isMember(circleID) external {
         Circle storage circle = circles[circleID];
         require(circle.memberInfo[msg.sender].balance >= amt, "Cannot withdraw more than deposited");
-        withdrawMoola(circleID, amt);
+        withdrawMoola(amt);
         IERC20(circle.tokenAddress).approve(msg.sender, amt);
         IERC20(circle.tokenAddress).transfer(msg.sender, amt);
         circle.memberInfo[msg.sender].balance -= amt;
     }
 
-    function withdrawMoola(bytes32 circleID, uint256 amt) private {
-        Circle storage circle = circles[circleID];
-        LendingPool moola = getLendingPool();
-        moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
+    function withdrawMoola(uint256 amt) private {
+        //Circle storage circle = circles[circleID];
+        //LendingPool moola = getLendingPool();
+        //moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
+        AToken(mcUSD).redeem(amt);
     }
 }
