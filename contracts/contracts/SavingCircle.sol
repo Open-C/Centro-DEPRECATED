@@ -35,6 +35,7 @@ interface AToken {
 contract SavingCircle {
 
     ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
+    address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b);
 
     enum GovernanceType {
         anarchy,
@@ -76,8 +77,6 @@ contract SavingCircle {
     event ContributionMade(address user, bytes32 circle, uint256 amount);
     event RequestMade(address requester, bytes32 circle, uint256 amount);
     event RequestGranted(address requester, bytes32 circle, uint256 amount);
-    
-    address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b);
 
     modifier onlyOwner(address owner) {
         require(msg.sender == owner);
@@ -207,16 +206,15 @@ contract SavingCircle {
 
 
 
-    function deposit(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
+    function deposit(bytes32 circleID, address token, uint256 value) external {
         require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
         Circle storage circle = circles[circleID];
         require(token == circle.tokenAddress, "Incorrect token!");
-
         IERC20(token).transferFrom(msg.sender, address(this), value);
         
         LendingPool moola = getLendingPool();
         address payable lpCore = getLendingPoolCore();
-        IERC20(token).approve(lpCore, value);
+        require(IERC20(token).approve(lpCore, value), "Approval for LP core failed");
         moola.deposit(token, value, 0);
 
         circle.total += value;
@@ -224,17 +222,6 @@ contract SavingCircle {
         circle.memberInfo[msg.sender].amtContributed += value;
         totalBasis[token] += value;
     }
-
-    // function moveToMoola(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
-    //     require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
-    //     Circle storage circle = circles[circleID];
-    //     require(token == circle.tokenAddress, "Incorrect token!");
-
-    //     LendingPool moola = getLendingPool();
-    //     address payable lpCore = getLendingPoolCore();
-    //     IERC20(token).approve(lpCore, value);
-    //     moola.deposit(token, value, 0);
-    // }
 
     function request(bytes32 circleID, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];
@@ -286,7 +273,7 @@ contract SavingCircle {
         circle.memberInfo[msg.sender].balance -= amt;
     }
 
-    function withdrawMoola(uint256 amt) private {
+    function withdrawMoola(uint256 amt) internal {
         //Circle storage circle = circles[circleID];
         //LendingPool moola = getLendingPool();
         //moola.redeemUnderlying(circle.tokenAddress, payable(address(this)), amt, 0);
