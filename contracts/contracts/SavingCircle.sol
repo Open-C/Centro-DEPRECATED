@@ -34,8 +34,8 @@ interface AToken {
 
 contract SavingCircle {
 
-    ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
-    address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b);
+    ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483 );
+    address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b );
 
     enum GovernanceType {
         anarchy,
@@ -77,6 +77,7 @@ contract SavingCircle {
     event ContributionMade(address user, bytes32 circle, uint256 amount);
     event RequestMade(address requester, bytes32 circle, uint256 amount);
     event RequestGranted(address requester, bytes32 circle, uint256 amount);
+    
 
     modifier onlyOwner(address owner) {
         require(msg.sender == owner);
@@ -99,6 +100,12 @@ contract SavingCircle {
     }
     
     receive() external payable {}
+    
+    function emitEvents(bytes32 circle, address sender) public {
+        emit ContributionMade(sender, circle, 100);
+        emit RequestMade(sender, circle, 100);
+        emit RequestGranted(sender, circle, 100);
+    }
 
     function startNewCycle(bytes32 circle) public circleExists(circle) newCycle(circle) {
         Circle storage circ = circles[circle];
@@ -163,6 +170,17 @@ contract SavingCircle {
         }
         
     }
+    
+    function getRequest(bytes32 circleID, uint requestIndex) public view circleExists(circleID) returns (uint _approvals, uint _denials, address _requester, uint256 _amount) {
+        Request[] storage requests = circles[circleID].requests;
+        uint len = requests.length;
+        require(requestIndex < len, "Request index exceeds number of current requests");
+        Request memory request = requests[len];
+        _approvals = request.approvals;
+        _denials = request.denials;
+        _requester = request.requester;
+        _amount = request.amount;
+    }
 
     function createCircle(string calldata uuid, address[] calldata members, address tokenAddr, uint256 depositAmount, GovernanceType govType, uint cycleTime, bool autoStart) external {
         require(members[0] != address(0), "Must contain members");
@@ -206,10 +224,11 @@ contract SavingCircle {
 
 
 
-    function deposit(bytes32 circleID, address token, uint256 value) external {
+    function deposit(bytes32 circleID, address token, uint256 value) circleExists(circleID) external payable {
         require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
         Circle storage circle = circles[circleID];
         require(token == circle.tokenAddress, "Incorrect token!");
+
         IERC20(token).transferFrom(msg.sender, address(this), value);
         
         LendingPool moola = getLendingPool();
@@ -222,6 +241,17 @@ contract SavingCircle {
         circle.memberInfo[msg.sender].amtContributed += value;
         totalBasis[token] += value;
     }
+
+    // function moveToMoola(address token, uint256 value) external payable {
+    //     require(circles[circleID].memberInfo[msg.sender].isAlive, "Not a member");
+    //     Circle storage circle = circles[circleID];
+    //     require(token == circle.tokenAddress, "Incorrect token!");
+
+    //      LendingPool moola = getLendingPool();
+    //      address payable lpCore = getLendingPoolCore();
+    //      require(IERC20(token).approve(lpCore, value), "Approval for LP core failed");
+    //      moola.deposit(token, value, 0);
+    // }
 
     function request(bytes32 circleID, uint256 value) circleExists(circleID) isMember(circleID) external {
         Circle storage circle = circles[circleID];

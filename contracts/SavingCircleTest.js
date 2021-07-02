@@ -28,7 +28,7 @@ async function initContract() {
   await testDeposit(circle, account);
   //await testWithdraw(circle, account);
   //await testRequest(circle, account);
-  await testGetBalances(circle, account);
+  //await testGetBalances(circle, account);
   // await testQueryMissedPayments(circle, account);
 }
 
@@ -57,13 +57,13 @@ async function testDeposit(circle, account) {
   const cUSD = await kit.contracts.getStableToken();
   const circleIDs = await circle.methods.getCircles(account.address).call();
   console.log(circleIDs);
-  await deposit(circle, circleIDs[0], cUSD, 1);
+  //await deposit(circle, circleIDs[0], cUSD, 1);
 }
 
 async function testCircleCreation(circle, account) {
   let circleIDs = await circle.methods.getCircles(account.address).call();
   const gld = await kit.contracts.getStableToken();
-  if (circleIDs.length == 0) {
+  if (circleIDs.length < 10) {
     await createCircle(
       circle,
       "test1",
@@ -92,18 +92,22 @@ async function createCircle(
   let account = await getAccount();
   kit.connection.addAccount(account.privateKey);
   const amount = web3.utils.toWei(minDeposit + "");
-  const txObject = await contract.methods.createCircle(
-    name,
-    members,
-    token.address,
-    amount,
-    GOV_TYPE[govType],
-    cycleLength,
-    autoStart
-  );
-  let tx = await kit.sendTransactionObject(txObject, { from: account.address });
-  let receipt = await tx.waitReceipt();
-  console.log(receipt);
+  for (let i = 0; i < 11; i++) {
+    const txObject = await contract.methods.createCircle(
+      name + i,
+      members,
+      token.address,
+      amount,
+      GOV_TYPE[govType],
+      cycleLength,
+      autoStart
+    );
+    let tx = await kit.sendTransactionObject(txObject, {
+      from: account.address,
+    });
+    let receipt = await tx.waitReceipt();
+    console.log(receipt);
+  }
 }
 
 async function deposit(contract, circleId, token, amt) {
@@ -148,9 +152,9 @@ async function request(contract, circleId, amt) {
   kit.connection.addAccount(account.privateKey);
   const amount = web3.utils.toWei(amt + "");
 
-  const tx = await contract.methods
-    .request(circleId, amount)
-    .send({ from: account.address });
+  // const tx = await contract.methods
+  //   .request(circleId, amount)
+  //   .send({ from: account.address });
   const tx = await kit.sendTransactionObject(txObject, {
     from: account.address,
   });
