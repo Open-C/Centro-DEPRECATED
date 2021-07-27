@@ -1,0 +1,16 @@
+{
+  "contracts": {
+    "MainNet": {
+      "UbeswapRouter": "0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121",
+      "UbeswapFactory": "0x62d5b84bE28a183aBB507E125B384122D2C25fAE",
+      "Ube Pool Manager": "0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2",
+      "moolaProvider": "0x7AAaD5a5fa74Aec83b74C2a098FBC86E17Ce4aEA"
+    },
+    "Alfajores": {
+      "UbeswapRouter": "0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121",
+      "UbeswapFactory": "0x62d5b84bE28a183aBB507E125B384122D2C25fAE",
+      "Ube Pool Manager": "0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2",
+      "moolaProvider": "0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483"
+    }
+  }
+}
