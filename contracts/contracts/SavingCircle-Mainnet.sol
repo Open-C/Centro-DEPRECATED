@@ -34,7 +34,7 @@ interface AToken {
 
 contract SavingCircle {
 
-    ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483 );
+    ILendingPoolAddressesProvider lpa = ILendingPoolAddressesProvider(0x6EAE47ccEFF3c3Ac94971704ccd25C7820121483);
     address mcUSD = address(0x71DB38719f9113A36e14F409bAD4F07B58b4730b );
 
     enum GovernanceType {
