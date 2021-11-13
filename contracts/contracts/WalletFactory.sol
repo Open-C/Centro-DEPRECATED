@@ -33,21 +33,20 @@ contract WalletFactory is Types {
 		admin[toAdd] = true;
 	}
 
-	function newWallet(string calldata name) external {
+	function newWallet() external {
 		address owner = msg.sender;
 
 		CentroWallet wallet = new CentroWallet(owner, address(store));
-		Wallet storage _wallet = walletIDToWallet[numWallets];
-		uint256[] storage walletIDs = addressToWalletIDs[owner];
+		// Wallet storage _wallet = walletIDToWallet[numWallets];
+		// uint256[] storage walletIDs = addressToWalletIDs[owner];
 		//bool isFirstWallet = walletIDs.length == 0;
-		uint256 walletID = numWallets;
+		// uint256 walletID = numWallets;
 
-		_wallet.name = name;
-		_wallet.addr = address(wallet);
-		_wallet.owner = owner;
-		walletIDs.push(walletID);
-		numWallets++;
-		currentWallet[msg.sender] = walletID;
+		// _wallet.addr = address(wallet);
+		// _wallet.owner = owner;
+		// walletIDs.push(walletID);
+		// numWallets++;
+		// currentWallet[msg.sender] = walletID;
 
 		//EventEmitter(store.getEventEmitter()).emitWalletCreated(msg.sender, address(wallet), isFirstWallet);
 	}

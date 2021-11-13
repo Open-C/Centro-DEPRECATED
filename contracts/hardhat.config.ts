@@ -83,7 +83,7 @@ export default {
       chainId: ICeloNetwork.MAINNET,
       live: true,
       gasPrice: 0.5 * 10 ** 10,
-      gas: 2500000,
+      gas: 8000000,
     },
     alfajores: {
       url: fornoURLs[ICeloNetwork.ALFAJORES],
