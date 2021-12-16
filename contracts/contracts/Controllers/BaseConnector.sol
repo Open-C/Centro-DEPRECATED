@@ -12,6 +12,8 @@ contract BaseConnector {
         walletFactory = _factory;
     }
 
+	function getContract()
+
     // function _getWallet(uint256 _walletID) internal view returns (CentroWallet) {
 	// 	uint256 walletID = _walletID == 0 ? currentWallet[msg.sender] : _walletID;
 	// 	require(walletID != 0, "Provide a wallet id, or persist a wallet.");
